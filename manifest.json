@@ -1,0 +1,17 @@
+{
+  "name": "Мала — лічильник мантр",
+  "short_name": "Мала",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#12121a",
+  "theme_color": "#12121a",
+  "lang": "uk",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

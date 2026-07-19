@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#12121a">
+<title>Мала — лічильник мантр</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+  --bg:#12121a; --bg2:#1a1a25; --card:#20202e; --card2:#282838;
+  --text:#e8e6f0; --muted:#8a8899; --accent:#c9a86a; --accent2:#e0c48a;
+  --danger:#c96a6a; --ok:#6ac98a; --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  overscroll-behavior:none; user-select:none; -webkit-user-select:none;
+}
+#app{max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+.view{display:none;flex:1;flex-direction:column;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+.view.active{display:flex}
+header{display:flex;align-items:center;gap:12px;margin-bottom:14px;min-height:40px}
+header h1{font-size:20px;font-weight:600;flex:1;letter-spacing:.3px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{
+  background:var(--card);border:none;color:var(--text);width:40px;height:40px;
+  border-radius:12px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;
+}
+.iconbtn:active{background:var(--card2)}
+.chipbtn{
+  background:var(--card);border:none;color:var(--text);padding:8px 14px;border-radius:20px;
+  font-size:13px;cursor:pointer;font-weight:500;
+}
+.chipbtn:active{background:var(--card2)}
+/* ---------- tabs ---------- */
+.tabbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:6;
+  background:rgba(18,18,26,.92);backdrop-filter:blur(12px);
+  border-top:1px solid var(--card);
+  display:flex;max-width:520px;margin:0 auto;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tab{
+  flex:1;background:none;border:none;color:var(--muted);padding:12px 0 14px;
+  font-size:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:500;
+}
+.tab .ticon{font-size:20px;line-height:1}
+.tab.active{color:var(--accent)}
+#homeView{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+/* ---------- continue card ---------- */
+.continue-card{
+  background:linear-gradient(135deg,#2b2540,#20202e);border:1px solid #35304a;
+  border-radius:var(--radius);padding:14px;margin-bottom:16px;cursor:pointer;
+  display:flex;gap:14px;align-items:center;
+}
+.continue-card:active{filter:brightness(1.1)}
+.continue-cap{color:var(--accent2);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+/* ---------- list cards ---------- */
+.mantra-card{
+  background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:12px;
+  display:flex;gap:14px;align-items:center;cursor:pointer;
+}
+.mantra-card:active{background:var(--card2)}
+.mantra-thumb{
+  width:56px;height:56px;border-radius:12px;background:var(--bg2);flex:none;
+  background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;
+  font-size:24px;color:var(--accent);
+}
+.mantra-info{flex:1;min-width:0}
+.mantra-name{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mantra-sub{color:var(--muted);font-size:13px;margin-top:3px}
+.mini-progress{height:4px;background:var(--bg2);border-radius:2px;margin-top:8px;overflow:hidden}
+.mini-progress i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.mini-progress i.done{background:var(--ok)}
+.done-mark{color:var(--ok);font-size:18px;flex:none}
+.order-btns{display:flex;flex-direction:column;gap:4px;flex:none}
+.order-btns button{
+  background:var(--bg2);border:none;color:var(--muted);width:28px;height:24px;
+  border-radius:8px;font-size:12px;cursor:pointer;
+}
+.empty{color:var(--muted);text-align:center;margin-top:22vh;font-size:15px;line-height:1.7;padding:0 24px;white-space:pre-line}
+.fab{
+  position:fixed;right:20px;bottom:calc(86px + env(safe-area-inset-bottom));
+  width:58px;height:58px;border-radius:50%;border:none;background:var(--accent);
+  color:#1a1408;font-size:28px;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,106,.35);
+  display:flex;align-items:center;justify-content:center;z-index:5;
+}
+.fab.inner{bottom:calc(24px + env(safe-area-inset-bottom))}
+.section-title{font-size:13px;color:var(--muted);margin:18px 0 10px;letter-spacing:.6px;text-transform:uppercase}
+/* ---------- retreat ---------- */
+.retreat-head{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.retreat-dates{color:var(--muted);font-size:13px;margin-top:4px}
+.retreat-overall{margin-top:12px}
+.bar{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px;transition:width .3s}
+.bar i.done{background:var(--ok)}
+.bar-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px;font-variant-numeric:tabular-nums}
+/* ---------- counter ---------- */
+#counterView{padding:0}
+.counter-head{display:flex;align-items:center;gap:10px;padding:14px 16px 8px}
+.counter-head h1{font-size:17px}
+.counter-chips{display:flex;gap:8px;padding:0 16px 8px}
+.tap-area{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;min-height:220px;position:relative;overflow:hidden;
+  margin:6px 12px 10px;border-radius:20px;background-size:cover;background-position:center;
+  background-repeat:no-repeat;background-color:transparent;
+}
+.tap-area.has-img{background-color:#0a0a10}
+.tap-area.has-img .mala-ring{display:none}
+.tap-area .count-overlay{
+  position:absolute;left:0;right:0;bottom:0;padding:56px 16px 14px;
+  background:linear-gradient(transparent,rgba(10,10,16,.82));
+  text-align:center;pointer-events:none;display:none;
+}
+.tap-area.has-img .count-overlay{display:block}
+.tap-area.has-img .count-center{display:none}
+.count-center{display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.count-big{font-size:min(20vw,88px);font-weight:200;font-variant-numeric:tabular-nums;line-height:1}
+.count-overlay .count-big{font-size:min(15vw,64px);font-weight:300;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.count-label{color:var(--muted);font-size:13px;margin-top:8px;letter-spacing:.5px}
+.count-overlay .count-label{color:#cfcadd;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.mala-ring{position:absolute;width:min(72vw,300px);height:min(72vw,300px);pointer-events:none}
+.mala-ring circle{fill:none;stroke-width:5;stroke-linecap:round}
+.ring-bg{stroke:var(--bg2)}
+.ring-fg{stroke:var(--accent);transition:stroke-dashoffset .15s}
+.mantra-text-bar{
+  margin:0 16px 8px;background:var(--card);border-radius:12px;padding:10px 14px;
+  color:var(--accent2);font-size:14px;font-style:italic;text-align:center;cursor:pointer;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.mantra-text-bar.expanded{white-space:pre-wrap;font-size:16px;line-height:1.6;padding:16px}
+.counter-meta{
+  display:flex;justify-content:space-between;padding:0 20px 8px;
+  color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;
+}
+.counter-progress{padding:0 16px 12px}
+.counter-actions{display:flex;gap:10px;padding:0 16px calc(18px + env(safe-area-inset-bottom))}
+.cbtn{
+  flex:1;background:var(--card);border:none;color:var(--text);padding:15px 8px;
+  border-radius:14px;font-size:15px;cursor:pointer;font-weight:500;
+}
+.cbtn:active{background:var(--card2)}
+.cbtn.gold{background:var(--accent);color:#1a1408;font-weight:600}
+.cbtn.green{background:var(--ok);color:#0c1a10;font-weight:600}
+.cbtn.small{flex:0 0 64px}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+.pop{animation:pop .18s ease}
+@keyframes flash{0%{box-shadow:inset 0 0 0 0 rgba(201,168,106,0)}30%{box-shadow:inset 0 0 120px rgba(201,168,106,.3)}100%{box-shadow:inset 0 0 0 0 rgba(201,168,106,0)}}
+.flash{animation:flash .7s ease}
+/* ---------- stats ---------- */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat-box{background:var(--card);border-radius:var(--radius);padding:14px}
+.stat-num{font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat-cap{color:var(--muted);font-size:12px;margin-top:4px}
+.chart{display:flex;align-items:flex-end;gap:4px;height:110px;background:var(--card);border-radius:var(--radius);padding:12px}
+.chart .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.chart .colbar{width:100%;max-width:22px;background:var(--accent);border-radius:4px 4px 0 0;min-height:2px;opacity:.9}
+.chart .colbar.zero{background:var(--bg2)}
+.chart .collab{color:var(--muted);font-size:9px;margin-top:5px}
+.hist-row{display:flex;justify-content:space-between;padding:11px 14px;background:var(--card);border-radius:12px;margin-bottom:8px;font-size:14px}
+.hist-row span:last-child{font-variant-numeric:tabular-nums;color:var(--accent2)}
+/* ---------- modal / forms ---------- */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:10;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.sheet{
+  background:var(--bg2);width:100%;max-width:520px;border-radius:20px 20px 0 0;
+  padding:20px 20px calc(24px + env(safe-area-inset-bottom));max-height:88dvh;overflow-y:auto;
+}
+.sheet h2{font-size:17px;margin-bottom:14px}
+label{display:block;color:var(--muted);font-size:13px;margin:14px 0 6px}
+input[type=text],input[type=number],input[type=date],textarea{
+  width:100%;background:var(--card);border:1px solid transparent;color:var(--text);
+  padding:12px;border-radius:12px;font-size:15px;font-family:inherit;color-scheme:dark;
+}
+input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{resize:vertical;min-height:70px}
+.img-pick{display:flex;align-items:center;gap:12px}
+.img-preview{width:64px;height:64px;border-radius:12px;background:var(--card);background-size:cover;background-position:center;flex:none}
+.btn{
+  width:100%;padding:14px;border-radius:14px;border:none;font-size:16px;font-weight:600;
+  cursor:pointer;margin-top:18px;background:var(--accent);color:#1a1408;
+}
+.btn.secondary{background:var(--card);color:var(--text);font-weight:500;margin-top:10px}
+.btn.danger{background:transparent;color:var(--danger);font-weight:500;margin-top:6px}
+.row2{display:flex;gap:10px}
+.row2>div{flex:1}
+.lang-toggle{font-size:13px;font-weight:600;width:auto;padding:0 12px}
+.pick-item{
+  background:var(--card);border-radius:12px;padding:13px 14px;margin-bottom:8px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;font-size:15px;
+}
+.pick-item:active{background:var(--card2)}
+.pick-item span:last-child{color:var(--muted);font-size:13px}
+/* ---------- crop editor ---------- */
+.crop-frame{
+  width:100%;aspect-ratio:3/4;max-height:52dvh;overflow:hidden;border-radius:14px;
+  background:#000;position:relative;touch-action:none;cursor:grab;margin-top:6px;
+}
+.crop-frame img{
+  position:absolute;left:50%;top:50%;user-select:none;pointer-events:none;
+  -webkit-user-drag:none;max-width:none;
+}
+.crop-hint{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
+input[type=range]{width:100%;margin-top:12px;accent-color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME (tabs) -->
+  <div class="view active" id="homeView">
+    <header>
+      <h1 id="homeTitle">Практика</h1>
+      <button class="iconbtn lang-toggle" id="langBtn">EN</button>
+    </header>
+    <div id="continueSlot"></div>
+    <div id="practiceTab">
+      <div id="mantraList"></div>
+      <div class="empty" id="emptyPractice" style="display:none"></div>
+    </div>
+    <div id="retreatsTab" style="display:none">
+      <div id="retreatList"></div>
+      <div id="archivedSection" style="display:none">
+        <div class="section-title" data-i18n="archived">Архів</div>
+        <div id="archivedList"></div>
+      </div>
+      <div class="empty" id="emptyRetreats" style="display:none"></div>
+    </div>
+    <button class="fab" id="homeFab">+</button>
+  </div>
+
+  <!-- RETREAT DETAIL -->
+  <div class="view" id="retreatView" style="padding-bottom:calc(96px + env(safe-area-inset-bottom))">
+    <header>
+      <button class="iconbtn" id="rBackBtn">←</button>
+      <h1 id="rTitle"></h1>
+      <button class="chipbtn" id="rEditBtn"></button>
+    </header>
+    <div class="retreat-head">
+      <div class="retreat-dates" id="rDates"></div>
+      <div class="retreat-overall">
+        <div class="bar"><i id="rBar"></i></div>
+        <div class="bar-label"><span id="rBarText"></span><span id="rPct"></span></div>
+      </div>
+    </div>
+    <div id="rMantraList"></div>
+    <div class="empty" id="emptyRetreatItems" style="display:none"></div>
+    <button class="fab inner" id="rFab">+</button>
+  </div>
+
+  <!-- COUNTER -->
+  <div class="view" id="counterView">
+    <div class="counter-head">
+      <button class="iconbtn" id="backBtn">←</button>
+      <h1 id="counterTitle"></h1>
+    </div>
+    <div class="counter-chips">
+      <button class="chipbtn" id="statsBtn"></button>
+      <button class="chipbtn" id="editBtn"></button>
+      <button class="chipbtn" id="fitBtn" style="display:none"></button>
+    </div>
+    <div class="mantra-text-bar" id="mantraTextBar" style="display:none"></div>
+    <div class="tap-area" id="tapArea">
+      <svg class="mala-ring" viewBox="0 0 100 100">
+        <circle class="ring-bg" cx="50" cy="50" r="46"></circle>
+        <circle class="ring-fg" id="ringFg" cx="50" cy="50" r="46" transform="rotate(-90 50 50)"></circle>
+      </svg>
+      <div class="count-center">
+        <div class="count-big" id="countBig">0</div>
+        <div class="count-label" id="countLabel"></div>
+      </div>
+      <div class="count-overlay">
+        <div class="count-big" id="countBigImg">0</div>
+        <div class="count-label" id="countLabelImg"></div>
+      </div>
+    </div>
+    <div class="counter-meta">
+      <span id="sessionText"></span>
+      <span id="todayText"></span>
+    </div>
+    <div class="counter-progress">
+      <div class="bar"><i id="goalBar"></i></div>
+      <div class="bar-label"><span id="goalText"></span><span id="goalPct"></span></div>
+    </div>
+    <div class="counter-actions">
+      <button class="cbtn small" id="undoBtn">−1</button>
+      <button class="cbtn gold" id="malaBtn">+ мала</button>
+      <button class="cbtn green" id="nextBtn" style="display:none"></button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="view" id="statsView">
+    <header>
+      <button class="iconbtn" id="statsBackBtn">←</button>
+      <h1 id="statsTitle"></h1>
+    </header>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-num" id="stTotal">0</div><div class="stat-cap" data-i18n="stTotal">всього начитано</div></div>
+      <div class="stat-box"><div class="stat-num" id="stPercent">0%</div><div class="stat-cap" data-i18n="stPercent">від цілі</div></div>
+      <div class="stat-box"><div class="stat-num" id="stToday">0</div><div class="stat-cap" data-i18n="stToday">сьогодні</div></div>
+      <div class="stat-box"><div class="stat-num" id="stStreak">0</div><div class="stat-cap" data-i18n="stStreak">днів поспіль</div></div>
+    </div>
+    <div class="counter-progress" style="padding:0 0 4px">
+      <div class="bar"><i id="stGoalBar"></i></div>
+      <div class="bar-label"><span id="stGoalText"></span><span id="stLeftText"></span></div>
+    </div>
+    <div class="section-title" data-i18n="last14">Останні 14 днів</div>
+    <div class="chart" id="chart"></div>
+    <div class="section-title" data-i18n="history">Історія</div>
+    <div id="historyList"></div>
+  </div>
+
+  <!-- MANTRA FORM -->
+  <div class="modal" id="editModal">
+    <div class="sheet">
+      <h2 id="formTitle"></h2>
+      <label data-i18n="fName">Назва</label>
+      <input type="text" id="fName" maxlength="60">
+      <label data-i18n="fText">Текст мантри (необовʼязково)</label>
+      <textarea id="fText"></textarea>
+      <label data-i18n="fImage">Зображення (необовʼязково)</label>
+      <div class="img-pick">
+        <div class="img-preview" id="imgPreview"></div>
+        <button class="cbtn" id="pickImgBtn" style="flex:1" data-i18n="pickImg">Обрати зображення</button>
+        <input type="file" id="fImage" accept="image/*" hidden>
+      </div>
+      <div class="row2">
+        <div>
+          <label data-i18n="fGoal">Ціль (повторень)</label>
+          <input type="number" id="fGoal" min="0" inputmode="numeric">
+        </div>
+        <div>
+          <label data-i18n="fMala">Розмір мали</label>
+          <input type="number" id="fMala" value="108" min="1" inputmode="numeric">
+        </div>
+      </div>
+      <button class="btn" id="saveBtn" data-i18n="save">Зберегти</button>
+      <button class="btn secondary" id="cancelBtn" data-i18n="cancel">Скасувати</button>
+      <button class="btn danger" id="deleteBtn" style="display:none" data-i18n="delete">Видалити мантру</button>
+    </div>
+  </div>
+
+  <!-- CROP EDITOR -->
+  <div class="modal" id="cropModal">
+    <div class="sheet">
+      <h2 data-i18n="cropTitle">Кадрування</h2>
+      <div class="crop-frame" id="cropFrame"><img id="cropImg" alt=""></div>
+      <div class="crop-hint" data-i18n="cropHint">Перетягни зображення, масштаб — повзунком</div>
+      <input type="range" id="cropZoom" min="100" max="300" value="100">
+      <button class="btn" id="cropDoneBtn" data-i18n="cropDone">Готово</button>
+      <button class="btn secondary" id="cropSkipBtn" data-i18n="cropSkip">Без кадрування (все зображення)</button>
+    </div>
+  </div>
+
+  <!-- RETREAT FORM -->
+  <div class="modal" id="retreatModal">
+    <div class="sheet">
+      <h2 id="rFormTitle"></h2>
+      <label data-i18n="rName">Назва ретриту</label>
+      <input type="text" id="rfName" maxlength="80">
+      <div class="row2">
+        <div><label data-i18n="rStart">Початок</label><input type="date" id="rfStart"></div>
+        <div><label data-i18n="rEnd">Кінець</label><input type="date" id="rfEnd"></div>
+      </div>
+      <button class="btn" id="rSaveBtn" data-i18n="save">Зберегти</button>
+      <button class="btn secondary" id="rCancelBtn" data-i18n="cancel">Скасувати</button>
+      <button class="btn secondary" id="rArchiveBtn" style="display:none"></button>
+      <button class="btn danger" id="rDeleteBtn" style="display:none" data-i18n="rDelete">Видалити ретрит</button>
+    </div>
+  </div>
+
+  <!-- ADD-TO-RETREAT PICKER -->
+  <div class="modal" id="pickModal">
+    <div class="sheet">
+      <h2 data-i18n="addToRetreat">Додати мантру в ретрит</h2>
+      <div id="pickStep1">
+        <button class="btn" id="pickNewBtn" data-i18n="pickNew">Нова мантра</button>
+        <button class="btn secondary" id="pickLinkBtn" data-i18n="pickLink">З моїх мантр (спільний лічильник)</button>
+        <button class="btn secondary" id="pickCancelBtn" data-i18n="cancel">Скасувати</button>
+      </div>
+      <div id="pickStep2" style="display:none">
+        <div id="pickList" style="margin-top:8px"></div>
+        <button class="btn secondary" id="pickBackBtn" data-i18n="back">← Назад</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+/* ================= i18n ================= */
+const I18N = {
+  uk:{practice:"Практика",retreats:"Ретрити",
+    emptyPractice:"Поки що порожньо.\nНатисни +, щоб додати першу мантру.",
+    emptyRetreats:"Ретритів ще немає.\nНатисни +, щоб створити.",
+    emptyRetreatItems:"Додай мантри в цей ретрит кнопкою +",
+    continueCap:"Продовжити",archived:"Архів",
+    tapHint:"торкнись екрана, щоб додати +1",newMantra:"Нова мантра",editMantra:"Редагувати",
+    fName:"Назва",fText:"Текст мантри (необовʼязково)",fImage:"Зображення (необовʼязково)",
+    pickImg:"Обрати зображення",fGoal:"Ціль (повторень)",fMala:"Розмір мали",
+    save:"Зберегти",cancel:"Скасувати",back:"← Назад",delete:"Видалити мантру",
+    confirmDelete:"Видалити цю мантру разом з усією історією?",
+    stTotal:"всього начитано",stPercent:"від цілі",stToday:"сьогодні",stStreak:"днів поспіль",
+    last14:"Останні 14 днів",history:"Історія",today:"сьогодні",session:"сесія",left:"залишилось",
+    goalOf:"з",malaLabel:"у поточній малі",nameRequired:"Вкажи назву",
+    phName:"Ченрезіг",phText:"ОМ МАНІ ПАДМЕ ХУМ",
+    stats:"Статистика",edit:"Редагувати",next:"Наступна →",
+    newRetreat:"Новий ретрит",editRetreat:"Редагувати ретрит",rName:"Назва ретриту",
+    rStart:"Початок",rEnd:"Кінець",rDelete:"Видалити ретрит",
+    confirmDeleteRetreat:"Видалити ретрит з усіма мантрами та історією?",
+    archive:"Архівувати",unarchive:"Розархівувати",
+    addToRetreat:"Додати мантру в ретрит",pickNew:"Нова мантра",
+    pickLink:"З моїх мантр (спільний лічильник)",
+    daysLeft:"днів лишилось",completedOf:"завершено",linked:"спільна",
+    mantrasWord:"мантр",noDates:"без дат",
+    cropTitle:"Кадрування",cropHint:"Перетягни зображення, масштаб — повзунком",
+    cropDone:"Готово",cropSkip:"Без кадрування (все зображення)",
+    showFull:"Повністю",fillScreen:"Заповнити"},
+  en:{practice:"Practice",retreats:"Retreats",
+    emptyPractice:"Nothing here yet.\nTap + to add your first mantra.",
+    emptyRetreats:"No retreats yet.\nTap + to create one.",
+    emptyRetreatItems:"Add mantras to this retreat with the + button",
+    continueCap:"Continue",archived:"Archive",
+    tapHint:"tap the screen to add +1",newMantra:"New mantra",editMantra:"Edit",
+    fName:"Name",fText:"Mantra text (optional)",fImage:"Image (optional)",
+    pickImg:"Choose image",fGoal:"Goal (repetitions)",fMala:"Mala size",
+    save:"Save",cancel:"Cancel",back:"← Back",delete:"Delete mantra",
+    confirmDelete:"Delete this mantra with all its history?",
+    stTotal:"total recited",stPercent:"of goal",stToday:"today",stStreak:"day streak",
+    last14:"Last 14 days",history:"History",today:"today",session:"session",left:"left",
+    goalOf:"of",malaLabel:"in current mala",nameRequired:"Please enter a name",
+    phName:"Chenrezig",phText:"OM MANI PADME HUM",
+    stats:"Statistics",edit:"Edit",next:"Next →",
+    newRetreat:"New retreat",editRetreat:"Edit retreat",rName:"Retreat name",
+    rStart:"Start",rEnd:"End",rDelete:"Delete retreat",
+    confirmDeleteRetreat:"Delete this retreat with all mantras and history?",
+    archive:"Archive",unarchive:"Unarchive",
+    addToRetreat:"Add mantra to retreat",pickNew:"New mantra",
+    pickLink:"From my mantras (shared counter)",
+    daysLeft:"days left",completedOf:"completed",linked:"shared",
+    mantrasWord:"mantras",noDates:"no dates",
+    cropTitle:"Crop",cropHint:"Drag the image, zoom with the slider",
+    cropDone:"Done",cropSkip:"No crop (whole image)",
+    showFull:"Fit whole",fillScreen:"Fill screen"}
+};
+function t(k){return I18N[state.lang][k]||k}
+
+/* ================= state ================= */
+const KEY="malaCounter.v2";
+let state = load();
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY));
+    if(s && Array.isArray(s.mantras)){ s.retreats=s.retreats||[]; return s; }
+  }catch(e){}
+  // migrate v1
+  try{
+    const v1=JSON.parse(localStorage.getItem("malaCounter.v1"));
+    if(v1 && Array.isArray(v1.mantras)){
+      const s={lang:v1.lang||"uk",mantras:v1.mantras,retreats:[],last:null};
+      localStorage.setItem(KEY,JSON.stringify(s));
+      return s;
+    }
+  }catch(e){}
+  return {lang:"uk",mantras:[],retreats:[],last:null};
+}
+function save(){ localStorage.setItem(KEY,JSON.stringify(state)); }
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function fmt(n){ return n.toLocaleString(state.lang==="uk"?"uk-UA":"en-US"); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function el(id){ return document.getElementById(id); }
+function findMantra(id){ return state.mantras.find(m=>m.id===id); }
+function findRetreat(id){ return state.retreats.find(r=>r.id===id); }
+
+/* ================= i18n render ================= */
+function applyLang(){
+  document.querySelectorAll("[data-i18n]").forEach(e=>{ e.textContent=t(e.dataset.i18n); });
+  el("fName").placeholder=t("phName");
+  el("fText").placeholder=t("phText");
+  el("statsBtn").textContent="▤ "+t("stats");
+  el("editBtn").textContent="✎ "+t("edit");
+  el("nextBtn").textContent=t("next");
+  el("langBtn").textContent=state.lang==="uk"?"EN":"УК";
+  el("tabPractice").querySelector(".tlab").textContent=t("practice");
+  el("tabRetreats").querySelector(".tlab").textContent=t("retreats");
+  document.documentElement.lang=state.lang;
+}
+
+/* ================= tabs / home ================= */
+let activeTab="practice";
+const tabbar=document.createElement("div");
+tabbar.className="tabbar";
+tabbar.innerHTML=
+  '<button class="tab active" id="tabPractice"><span class="ticon">ॐ</span><span class="tlab">Практика</span></button>'+
+  '<button class="tab" id="tabRetreats"><span class="ticon">☸</span><span class="tlab">Ретрити</span></button>';
+document.body.appendChild(tabbar);
+function setTab(name){
+  activeTab=name;
+  el("tabPractice").classList.toggle("active",name==="practice");
+  el("tabRetreats").classList.toggle("active",name==="retreats");
+  el("practiceTab").style.display=name==="practice"?"block":"none";
+  el("retreatsTab").style.display=name==="retreats"?"block":"none";
+  el("homeTitle").textContent=t(name);
+  renderHome();
+}
+el("tabPractice").onclick=()=>setTab("practice");
+el("tabRetreats").onclick=()=>setTab("retreats");
+el("langBtn").onclick=()=>{ state.lang=state.lang==="uk"?"en":"uk"; save(); applyLang(); setTab(activeTab); };
+el("homeFab").onclick=()=>{ activeTab==="practice"? openForm({scope:"main"}) : openRetreatForm(null); };
+
+function showTabbar(v){ tabbar.style.display=v?"flex":"none"; }
+function show(id){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  el(id).classList.add("active");
+  showTabbar(id==="homeView");
+  window.scrollTo(0,0);
+}
+
+/* ================= home render ================= */
+function mantraCard(m,opts){
+  opts=opts||{};
+  const card=document.createElement("div");
+  card.className="mantra-card";
+  const done=m.goal>0 && m.count>=m.goal;
+  const pct=m.goal>0?Math.min(100,m.count/m.goal*100):0;
+  let sub=m.goal>0? fmt(m.count)+" / "+fmt(m.goal) : fmt(m.count);
+  if(m.linkId) sub+=" · "+t("linked");
+  card.innerHTML=
+    '<div class="mantra-thumb" style="'+(m.image?'background-image:url('+m.image+')':'')+'">'+(m.image?'':'ॐ')+'</div>'+
+    '<div class="mantra-info"><div class="mantra-name"></div>'+
+    '<div class="mantra-sub">'+sub+'</div>'+
+    (m.goal>0?'<div class="mini-progress"><i class="'+(done?'done':'')+'" style="width:'+pct+'%"></i></div>':'')+
+    '</div>'+
+    (done?'<div class="done-mark">✓</div>':'');
+  card.querySelector(".mantra-name").textContent=m.name;
+  if(opts.order){
+    const ob=document.createElement("div");
+    ob.className="order-btns";
+    ob.innerHTML='<button>↑</button><button>↓</button>';
+    const [up,down]=ob.querySelectorAll("button");
+    up.onclick=e=>{e.stopPropagation();opts.order(-1);};
+    down.onclick=e=>{e.stopPropagation();opts.order(1);};
+    card.appendChild(ob);
+  }
+  return card;
+}
+function renderHome(){
+  // continue card
+  const slot=el("continueSlot"); slot.innerHTML="";
+  const last=state.last;
+  if(last){
+    let m=null,r=null;
+    if(last.retreatId){ r=findRetreat(last.retreatId); m=r&&r.items.find(x=>x.id===last.mantraId); }
+    else m=findMantra(last.mantraId);
+    if(m){
+      const c=document.createElement("div");
+      c.className="continue-card";
+      const sub=(m.goal>0? fmt(m.count)+" / "+fmt(m.goal):fmt(m.count))+(r?" · "+r.name:"");
+      c.innerHTML='<div class="mantra-thumb" style="'+(m.image?'background-image:url('+m.image+')':'')+'">'+(m.image?'':'ॐ')+'</div>'+
+        '<div class="mantra-info"><div class="continue-cap">'+t("continueCap")+'</div>'+
+        '<div class="mantra-name"></div><div class="mantra-sub">'+sub+'</div></div>';
+      c.querySelector(".mantra-name").textContent=m.name;
+      c.onclick=()=>openCounter(m.id,r?r.id:null);
+      slot.appendChild(c);
+    }
+  }
+  // practice list
+  const list=el("mantraList"); list.innerHTML="";
+  el("emptyPractice").style.display=state.mantras.length?"none":"block";
+  el("emptyPractice").textContent=t("emptyPractice");
+  state.mantras.forEach(m=>{
+    const card=mantraCard(m);
+    card.onclick=()=>openCounter(m.id,null);
+    list.appendChild(card);
+  });
+  // retreats
+  const rl=el("retreatList"); rl.innerHTML="";
+  const al=el("archivedList"); al.innerHTML="";
+  const active=state.retreats.filter(r=>!r.archived);
+  const arch=state.retreats.filter(r=>r.archived);
+  el("emptyRetreats").style.display=state.retreats.length?"none":"block";
+  el("emptyRetreats").textContent=t("emptyRetreats");
+  el("archivedSection").style.display=arch.length?"block":"none";
+  function retreatCard(r){
+    const card=document.createElement("div");
+    card.className="mantra-card";
+    const goals=r.items.filter(i=>i.goal>0);
+    const sumGoal=goals.reduce((a,i)=>a+i.goal,0);
+    const sumDone=goals.reduce((a,i)=>a+Math.min(i.count,i.goal),0);
+    const pct=sumGoal>0?Math.min(100,sumDone/sumGoal*100):0;
+    const doneCnt=goals.filter(i=>i.count>=i.goal).length;
+    card.innerHTML=
+      '<div class="mantra-thumb">☸</div>'+
+      '<div class="mantra-info"><div class="mantra-name"></div>'+
+      '<div class="mantra-sub">'+r.items.length+' '+t("mantrasWord")+' · '+doneCnt+'/'+goals.length+' '+t("completedOf")+'</div>'+
+      (sumGoal>0?'<div class="mini-progress"><i class="'+(pct>=100?'done':'')+'" style="width:'+pct+'%"></i></div>':'')+
+      '</div>';
+    card.querySelector(".mantra-name").textContent=r.name;
+    card.onclick=()=>openRetreat(r.id);
+    return card;
+  }
+  active.forEach(r=>rl.appendChild(retreatCard(r)));
+  arch.forEach(r=>al.appendChild(retreatCard(r)));
+}
+
+/* ================= retreat view ================= */
+let curRetreatId=null;
+function openRetreat(id){
+  curRetreatId=id;
+  renderRetreat(); show("retreatView");
+}
+function renderRetreat(){
+  const r=findRetreat(curRetreatId); if(!r) return;
+  el("rTitle").textContent=r.name;
+  el("rEditBtn").textContent="✎ "+t("edit");
+  let dates="";
+  if(r.start||r.end){
+    dates=(r.start||"…")+" — "+(r.end||"…");
+    if(r.end && !r.archived){
+      const left=Math.ceil((new Date(r.end)-new Date(todayKey()))/86400000);
+      if(left>=0) dates+=" · "+left+" "+t("daysLeft");
+    }
+  } else dates=t("noDates");
+  el("rDates").textContent=dates;
+  const goals=r.items.filter(i=>i.goal>0);
+  const sumGoal=goals.reduce((a,i)=>a+i.goal,0);
+  const sumDone=goals.reduce((a,i)=>a+Math.min(i.count,i.goal),0);
+  const pct=sumGoal>0?Math.min(100,sumDone/sumGoal*100):0;
+  el("rBar").style.width=pct+"%";
+  el("rBar").className=pct>=100?"done":"";
+  el("rBarText").textContent=goals.filter(i=>i.count>=i.goal).length+"/"+goals.length+" "+t("completedOf")+" · "+fmt(sumDone)+" "+t("goalOf")+" "+fmt(sumGoal);
+  el("rPct").textContent=pct.toFixed(1)+"%";
+  const list=el("rMantraList"); list.innerHTML="";
+  el("emptyRetreatItems").style.display=r.items.length?"none":"block";
+  el("emptyRetreatItems").textContent=t("emptyRetreatItems");
+  r.items.forEach((m,idx)=>{
+    const card=mantraCard(m,{order:dir=>{
+      const j=idx+dir;
+      if(j<0||j>=r.items.length) return;
+      [r.items[idx],r.items[j]]=[r.items[j],r.items[idx]];
+      save(); renderRetreat();
+    }});
+    card.onclick=()=>openCounter(m.id,r.id);
+    list.appendChild(card);
+  });
+}
+el("rBackBtn").onclick=()=>{ setTab("retreats"); show("homeView"); };
+el("rEditBtn").onclick=()=>openRetreatForm(curRetreatId);
+el("rFab").onclick=()=>openPicker();
+
+/* ================= counter ================= */
+let cur=null, curCtxRetreat=null, session=0;
+const RING_LEN=2*Math.PI*46;
+el("ringFg").style.strokeDasharray=RING_LEN;
+
+function openCounter(mantraId,retreatId){
+  curCtxRetreat=retreatId?findRetreat(retreatId):null;
+  cur=curCtxRetreat? curCtxRetreat.items.find(x=>x.id===mantraId) : findMantra(mantraId);
+  if(!cur) return;
+  session=0;
+  state.last={mantraId:cur.id,retreatId:retreatId||null}; save();
+  el("counterTitle").textContent=cur.name+(curCtxRetreat?" · "+curCtxRetreat.name:"");
+  applyFit();
+  const bar=el("mantraTextBar");
+  bar.classList.remove("expanded");
+  if(cur.text){ bar.style.display="block"; bar.textContent=cur.text; }
+  else bar.style.display="none";
+  el("malaBtn").textContent="+ "+(cur.malaSize||108);
+  renderCounter(); show("counterView");
+}
+el("mantraTextBar").onclick=function(){ this.classList.toggle("expanded"); };
+function applyFit(){
+  const ta=el("tapArea"), fb=el("fitBtn");
+  if(cur&&cur.image){
+    ta.classList.add("has-img");
+    ta.style.backgroundImage="url("+cur.image+")";
+    ta.style.backgroundSize=cur.fit==="contain"?"contain":"cover";
+    fb.style.display="block";
+    // кнопка показує дію: що станеться при натисканні
+    fb.textContent="⛶ "+(cur.fit==="contain"?t("fillScreen"):t("showFull"));
+  } else {
+    ta.classList.remove("has-img");
+    ta.style.backgroundImage="none";
+    fb.style.display="none";
+  }
+}
+el("fitBtn").onclick=()=>{
+  cur.fit=cur.fit==="contain"?"cover":"contain";
+  save(); applyFit();
+};
+function renderCounter(){
+  const mala=cur.malaSize||108;
+  const inMala=cur.count%mala;
+  const lbl=inMala+" / "+mala+" · "+t("malaLabel");
+  el("countBig").textContent=fmt(cur.count);
+  el("countBigImg").textContent=fmt(cur.count);
+  el("countLabel").textContent=lbl;
+  el("countLabelImg").textContent=lbl;
+  el("ringFg").style.strokeDashoffset=RING_LEN*(1-inMala/mala);
+  const gb=el("goalBar");
+  if(cur.goal>0){
+    const pct=Math.min(100,cur.count/cur.goal*100);
+    gb.style.width=pct+"%";
+    gb.className=cur.count>=cur.goal?"done":"";
+    el("goalText").textContent=fmt(cur.count)+" "+t("goalOf")+" "+fmt(cur.goal);
+    el("goalPct").textContent=pct.toFixed(1)+"%";
+  } else { gb.style.width="0%"; el("goalText").textContent=""; el("goalPct").textContent=""; }
+  el("sessionText").textContent=t("session")+": +"+fmt(session);
+  el("todayText").textContent=t("today")+": "+fmt((cur.log||{})[todayKey()]||0);
+  // next button (retreat context, goal reached, next unfinished exists)
+  const nb=el("nextBtn");
+  let next=null;
+  if(curCtxRetreat && cur.goal>0 && cur.count>=cur.goal){
+    next=curCtxRetreat.items.find(i=>i.id!==cur.id && (i.goal===0||i.count<i.goal));
+  }
+  nb.style.display=next?"block":"none";
+  nb.onclick=next?()=>openCounter(next.id,curCtxRetreat.id):null;
+}
+function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); }
+function bump(m,n){
+  m.count=Math.max(0,m.count+n);
+  m.log=m.log||{};
+  const tk=todayKey();
+  m.log[tk]=Math.max(0,(m.log[tk]||0)+n);
+}
+function addCount(n){
+  const mala=cur.malaSize||108;
+  const before=Math.floor(cur.count/mala);
+  bump(cur,n);
+  if(cur.linkId){ const main=findMantra(cur.linkId); if(main) bump(main,n); }
+  session=Math.max(0,session+n);
+  const after=Math.floor(cur.count/mala);
+  if(n>0){
+    if(after>before){
+      vibrate([60,40,60]);
+      const cv=el("counterView");
+      cv.classList.remove("flash"); void cv.offsetWidth; cv.classList.add("flash");
+    } else vibrate(12);
+    const big=cur.image?el("countBigImg"):el("countBig");
+    big.classList.remove("pop"); void big.offsetWidth; big.classList.add("pop");
+  }
+  save(); renderCounter();
+}
+el("tapArea").addEventListener("pointerdown",()=>addCount(1));
+el("malaBtn").onclick=()=>addCount(cur.malaSize||108);
+el("undoBtn").onclick=()=>addCount(-1);
+el("backBtn").onclick=()=>{
+  if(curCtxRetreat){ openRetreat(curCtxRetreat.id); }
+  else { setTab("practice"); show("homeView"); }
+};
+el("editBtn").onclick=()=>openForm(curCtxRetreat?{scope:"retreat",retreatId:curCtxRetreat.id,itemId:cur.id}:{scope:"main",itemId:cur.id});
+el("statsBtn").onclick=()=>openStats();
+
+/* ================= stats ================= */
+function streak(m){
+  const log=m.log||{}; let s=0;
+  if((log[todayKey()]||0)>0) s=1;
+  const d=new Date(); d.setDate(d.getDate()-1);
+  for(;;){
+    const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    if((log[k]||0)>0){ s++; d.setDate(d.getDate()-1); } else break;
+  }
+  return s;
+}
+function openStats(){
+  const m=cur; if(!m) return;
+  el("statsTitle").textContent=m.name;
+  el("stTotal").textContent=fmt(m.count);
+  el("stPercent").textContent=m.goal>0?(Math.min(100,m.count/m.goal*100)).toFixed(1)+"%":"—";
+  el("stToday").textContent=fmt((m.log||{})[todayKey()]||0);
+  el("stStreak").textContent=streak(m);
+  el("stGoalBar").style.width=m.goal>0?Math.min(100,m.count/m.goal*100)+"%":"0%";
+  el("stGoalText").textContent=m.goal>0?fmt(m.count)+" "+t("goalOf")+" "+fmt(m.goal):"";
+  el("stLeftText").textContent=m.goal>0?t("left")+": "+fmt(Math.max(0,m.goal-m.count)):"";
+  const chart=el("chart"); chart.innerHTML="";
+  const log=m.log||{}; const days=[];
+  for(let i=13;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    days.push({n:log[k]||0,lab:d.getDate()});
+  }
+  const max=Math.max(1,...days.map(d=>d.n));
+  days.forEach(d=>{
+    const col=document.createElement("div"); col.className="col";
+    const h=d.n?Math.max(4,d.n/max*80):2;
+    col.innerHTML='<div class="colbar'+(d.n?'':' zero')+'" style="height:'+h+'px"></div><div class="collab">'+d.lab+'</div>';
+    chart.appendChild(col);
+  });
+  const hl=el("historyList"); hl.innerHTML="";
+  Object.keys(log).filter(k=>log[k]>0).sort().reverse().slice(0,60).forEach(k=>{
+    const row=document.createElement("div"); row.className="hist-row";
+    row.innerHTML="<span>"+k+"</span><span>+"+fmt(log[k])+"</span>";
+    hl.appendChild(row);
+  });
+  show("statsView");
+}
+el("statsBackBtn").onclick=()=>show("counterView");
+
+/* ================= mantra form ================= */
+let editCtx=null, formImage=null;
+const editModal=el("editModal");
+function formTarget(){
+  if(!editCtx.itemId) return null;
+  if(editCtx.scope==="retreat"){ const r=findRetreat(editCtx.retreatId); return r&&r.items.find(x=>x.id===editCtx.itemId); }
+  return findMantra(editCtx.itemId);
+}
+function openForm(ctx){
+  editCtx=ctx;
+  const m=formTarget();
+  el("formTitle").textContent=m?t("editMantra"):t("newMantra");
+  el("fName").value=m?m.name:(ctx.presetName||"");
+  el("fText").value=m?(m.text||""):(ctx.presetText||"");
+  el("fGoal").value=m&&m.goal?m.goal:(ctx.presetGoal||"");
+  el("fMala").value=m?(m.malaSize||108):(ctx.presetMala||108);
+  formImage=m?(m.image||null):(ctx.presetImage||null);
+  el("imgPreview").style.backgroundImage=formImage?"url("+formImage+")":"none";
+  el("deleteBtn").style.display=m?"block":"none";
+  editModal.classList.add("open");
+}
+el("cancelBtn").onclick=()=>editModal.classList.remove("open");
+editModal.addEventListener("pointerdown",e=>{ if(e.target===editModal) editModal.classList.remove("open"); });
+el("pickImgBtn").onclick=()=>el("fImage").click();
+
+/* ---- crop editor ---- */
+const cropModal=el("cropModal");
+let crop=null; // {img, natW, natH, base, zoom, ox, oy, fw, fh}
+function shrinkToDataUrl(img,sx,sy,sw,sh){
+  const MAX=1000;
+  const k=Math.min(1,MAX/Math.max(sw,sh));
+  const c=document.createElement("canvas");
+  c.width=Math.max(1,Math.round(sw*k)); c.height=Math.max(1,Math.round(sh*k));
+  c.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
+  return c.toDataURL("image/jpeg",.82);
+}
+function setFormImage(dataUrl){
+  formImage=dataUrl;
+  el("imgPreview").style.backgroundImage="url("+dataUrl+")";
+}
+function cropApply(){
+  const s=crop.base*crop.zoom;
+  const w=crop.natW*s, h=crop.natH*s;
+  const maxOx=Math.max(0,(w-crop.fw)/2), maxOy=Math.max(0,(h-crop.fh)/2);
+  crop.ox=Math.max(-maxOx,Math.min(maxOx,crop.ox));
+  crop.oy=Math.max(-maxOy,Math.min(maxOy,crop.oy));
+  const im=el("cropImg");
+  im.style.width=w+"px"; im.style.height=h+"px";
+  im.style.transform="translate(calc(-50% + "+crop.ox+"px), calc(-50% + "+crop.oy+"px))";
+}
+function openCrop(img){
+  const frame=el("cropFrame");
+  cropModal.classList.add("open");
+  const fw=frame.clientWidth||300, fh=frame.clientHeight||fw*4/3;
+  const base=Math.max(fw/img.width,fh/img.height); // cover
+  crop={img,natW:img.width,natH:img.height,base,zoom:1,ox:0,oy:0,fw,fh};
+  el("cropImg").src=img.src;
+  el("cropZoom").value=100;
+  cropApply();
+}
+el("fImage").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const img=new Image();
+  img.onload=()=>openCrop(img);
+  img.src=URL.createObjectURL(f);
+  e.target.value="";
+});
+el("cropZoom").addEventListener("input",e=>{
+  if(!crop) return;
+  crop.zoom=parseInt(e.target.value)/100;
+  cropApply();
+});
+(function(){
+  const frame=el("cropFrame");
+  let drag=null;
+  frame.addEventListener("pointerdown",e=>{
+    if(!crop) return;
+    drag={x:e.clientX,y:e.clientY,ox:crop.ox,oy:crop.oy};
+    frame.setPointerCapture&&frame.setPointerCapture(e.pointerId);
+  });
+  frame.addEventListener("pointermove",e=>{
+    if(!drag||!crop) return;
+    crop.ox=drag.ox+(e.clientX-drag.x);
+    crop.oy=drag.oy+(e.clientY-drag.y);
+    cropApply();
+  });
+  frame.addEventListener("pointerup",()=>{drag=null;});
+  frame.addEventListener("pointercancel",()=>{drag=null;});
+})();
+function closeCrop(){
+  cropModal.classList.remove("open");
+  if(crop){ try{URL.revokeObjectURL(crop.img.src);}catch(e){} crop=null; }
+}
+el("cropDoneBtn").onclick=()=>{
+  if(!crop) return;
+  const s=crop.base*crop.zoom;
+  const sw=crop.fw/s, sh=crop.fh/s;
+  const cx=crop.natW/2-crop.ox/s, cy=crop.natH/2-crop.oy/s;
+  const sx=Math.max(0,Math.min(crop.natW-sw,cx-sw/2));
+  const sy=Math.max(0,Math.min(crop.natH-sh,cy-sh/2));
+  setFormImage(shrinkToDataUrl(crop.img,sx,sy,Math.min(sw,crop.natW),Math.min(sh,crop.natH)));
+  closeCrop();
+};
+el("cropSkipBtn").onclick=()=>{
+  if(!crop) return;
+  setFormImage(shrinkToDataUrl(crop.img,0,0,crop.natW,crop.natH));
+  closeCrop();
+};
+el("saveBtn").onclick=()=>{
+  const name=el("fName").value.trim();
+  if(!name){ alert(t("nameRequired")); return; }
+  const goal=parseInt(el("fGoal").value)||0;
+  const malaSize=Math.max(1,parseInt(el("fMala").value)||108);
+  const text=el("fText").value.trim();
+  const m=formTarget();
+  if(m){
+    Object.assign(m,{name,text,goal,malaSize,image:formImage});
+  } else {
+    const item={id:uid(),name,text,goal,malaSize,image:formImage,count:0,log:{},createdAt:Date.now()};
+    if(editCtx.scope==="retreat"){
+      if(editCtx.linkId) item.linkId=editCtx.linkId;
+      findRetreat(editCtx.retreatId).items.push(item);
+    } else state.mantras.push(item);
+  }
+  save(); editModal.classList.remove("open");
+  afterDataChange();
+};
+el("deleteBtn").onclick=()=>{
+  if(!confirm(t("confirmDelete"))) return;
+  if(editCtx.scope==="retreat"){
+    const r=findRetreat(editCtx.retreatId);
+    r.items=r.items.filter(x=>x.id!==editCtx.itemId);
+  } else {
+    state.mantras=state.mantras.filter(x=>x.id!==editCtx.itemId);
+  }
+  if(state.last&&state.last.mantraId===editCtx.itemId) state.last=null;
+  save(); editModal.classList.remove("open");
+  if(cur&&cur.id===editCtx.itemId){ cur=null;
+    if(editCtx.scope==="retreat") openRetreat(editCtx.retreatId);
+    else { setTab("practice"); show("homeView"); }
+  } else afterDataChange();
+};
+function afterDataChange(){
+  const active=document.querySelector(".view.active").id;
+  if(active==="homeView") renderHome();
+  else if(active==="retreatView") renderRetreat();
+  else if(active==="counterView"&&cur){
+    // re-open to refresh visuals (image/text/title may have changed)
+    openCounter(cur.id,curCtxRetreat?curCtxRetreat.id:null);
+  }
+}
+
+/* ================= retreat form ================= */
+let rEditId=null;
+const retreatModal=el("retreatModal");
+function openRetreatForm(id){
+  rEditId=id;
+  const r=id?findRetreat(id):null;
+  el("rFormTitle").textContent=r?t("editRetreat"):t("newRetreat");
+  el("rfName").value=r?r.name:"";
+  el("rfStart").value=r?(r.start||""):"";
+  el("rfEnd").value=r?(r.end||""):"";
+  el("rArchiveBtn").style.display=r?"block":"none";
+  el("rArchiveBtn").textContent=r&&r.archived?t("unarchive"):t("archive");
+  el("rDeleteBtn").style.display=r?"block":"none";
+  retreatModal.classList.add("open");
+}
+el("rCancelBtn").onclick=()=>retreatModal.classList.remove("open");
+retreatModal.addEventListener("pointerdown",e=>{ if(e.target===retreatModal) retreatModal.classList.remove("open"); });
+el("rSaveBtn").onclick=()=>{
+  const name=el("rfName").value.trim();
+  if(!name){ alert(t("nameRequired")); return; }
+  const start=el("rfStart").value||null, end=el("rfEnd").value||null;
+  if(rEditId){
+    Object.assign(findRetreat(rEditId),{name,start,end});
+  } else {
+    const r={id:uid(),name,start,end,archived:false,items:[],createdAt:Date.now()};
+    state.retreats.push(r);
+    rEditId=r.id;
+    save(); retreatModal.classList.remove("open");
+    openRetreat(r.id); return;
+  }
+  save(); retreatModal.classList.remove("open");
+  const active=document.querySelector(".view.active").id;
+  active==="retreatView"?renderRetreat():renderHome();
+};
+el("rArchiveBtn").onclick=()=>{
+  const r=findRetreat(rEditId);
+  r.archived=!r.archived;
+  save(); retreatModal.classList.remove("open");
+  setTab("retreats"); show("homeView");
+};
+el("rDeleteBtn").onclick=()=>{
+  if(!confirm(t("confirmDeleteRetreat"))) return;
+  state.retreats=state.retreats.filter(r=>r.id!==rEditId);
+  if(state.last&&state.last.retreatId===rEditId) state.last=null;
+  save(); retreatModal.classList.remove("open");
+  setTab("retreats"); show("homeView");
+};
+
+/* ================= add-to-retreat picker ================= */
+const pickModal=el("pickModal");
+function openPicker(){
+  el("pickStep1").style.display="block";
+  el("pickStep2").style.display="none";
+  pickModal.classList.add("open");
+}
+el("pickCancelBtn").onclick=()=>pickModal.classList.remove("open");
+pickModal.addEventListener("pointerdown",e=>{ if(e.target===pickModal) pickModal.classList.remove("open"); });
+el("pickNewBtn").onclick=()=>{
+  pickModal.classList.remove("open");
+  openForm({scope:"retreat",retreatId:curRetreatId});
+};
+el("pickLinkBtn").onclick=()=>{
+  const list=el("pickList"); list.innerHTML="";
+  state.mantras.forEach(m=>{
+    const it=document.createElement("div");
+    it.className="pick-item";
+    it.innerHTML="<span></span><span>"+fmt(m.count)+"</span>";
+    it.querySelector("span").textContent=m.name;
+    it.onclick=()=>{
+      pickModal.classList.remove("open");
+      openForm({scope:"retreat",retreatId:curRetreatId,linkId:m.id,
+        presetName:m.name,presetText:m.text,presetImage:m.image,presetMala:m.malaSize});
+    };
+    list.appendChild(it);
+  });
+  el("pickStep1").style.display="none";
+  el("pickStep2").style.display="block";
+};
+el("pickBackBtn").onclick=()=>{
+  el("pickStep1").style.display="block";
+  el("pickStep2").style.display="none";
+};
+
+/* ================= init ================= */
+applyLang(); setTab("practice");
+if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js").catch(()=>{}); }
+if(window.Telegram&&Telegram.WebApp){ Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
+</script>
+</body>
+</html>
