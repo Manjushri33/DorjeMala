@@ -1,5 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#12121a"/>
-  <circle cx="256" cy="256" r="170" fill="none" stroke="#c9a86a" stroke-width="18" stroke-dasharray="4 40" stroke-linecap="round"/>
-  <text x="256" y="310" font-size="180" text-anchor="middle" fill="#e0c48a" font-family="serif">ॐ</text>
+<defs>
+<linearGradient id="obg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3ddab"/><stop offset="1" stop-color="#c9a86a"/></linearGradient>
+<radialGradient id="obguru" cx="38%" cy="32%"><stop offset="0" stop-color="#f7e7bf"/><stop offset="1" stop-color="#bd9550"/></radialGradient>
+</defs>
+<rect width="512" height="512" rx="112" fill="#12121a"/>
+<g transform="translate(86,120) scale(3.4)">
+<g fill="url(#obg)">
+<circle cx="60.87" cy="11.43" r="2.3"/><circle cx="71.0" cy="15.63" r="2.3"/><circle cx="79.70" cy="22.30" r="2.3"/><circle cx="86.37" cy="31.0" r="2.3"/><circle cx="90.57" cy="41.13" r="2.3"/><circle cx="92" cy="52" r="2.3"/><circle cx="90.57" cy="62.87" r="2.3"/><circle cx="86.37" cy="73.0" r="2.3"/><circle cx="79.70" cy="81.70" r="2.3"/><circle cx="71.0" cy="88.37" r="2.3"/><circle cx="60.87" cy="92.57" r="2.3"/>
+<circle cx="50" cy="94" r="2.3"/>
+<circle cx="39.13" cy="92.57" r="2.3"/><circle cx="29.0" cy="88.37" r="2.3"/><circle cx="20.30" cy="81.70" r="2.3"/><circle cx="13.63" cy="73.0" r="2.3"/><circle cx="9.43" cy="62.87" r="2.3"/><circle cx="8" cy="52" r="2.3"/><circle cx="9.43" cy="41.13" r="2.3"/><circle cx="13.63" cy="31.0" r="2.3"/><circle cx="20.30" cy="22.30" r="2.3"/><circle cx="29.0" cy="15.63" r="2.3"/><circle cx="39.13" cy="11.43" r="2.3"/>
+</g>
+<g stroke="url(#obg)" stroke-width="1.6" stroke-linecap="round"><path d="M50,-2 L46,-12"/><path d="M50,-2 L50,-13"/><path d="M50,-2 L54,-12"/></g>
+<rect x="46.6" y="-2" width="6.8" height="8.5" rx="2.6" fill="url(#obguru)"/><circle cx="50" cy="12" r="6" fill="url(#obguru)"/>
+<g stroke="url(#obg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+<path d="M50,45 L50,34"/><path d="M50,46 C44,41 45,36 50,34"/><path d="M50,46 C56,41 55,36 50,34"/>
+<path d="M50,59 L50,70"/><path d="M50,58 C44,63 45,68 50,70"/><path d="M50,58 C56,63 55,68 50,70"/></g>
+<circle cx="50" cy="33" r="1.8" fill="url(#obg)"/><circle cx="50" cy="71" r="1.8" fill="url(#obg)"/>
+<circle cx="50" cy="45" r="2.4" fill="url(#obg)"/><circle cx="50" cy="59" r="2.4" fill="url(#obg)"/>
+<g transform="rotate(90 50 52)"><g stroke="url(#obg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+<path d="M50,45 L50,34"/><path d="M50,46 C44,41 45,36 50,34"/><path d="M50,46 C56,41 55,36 50,34"/>
+<path d="M50,59 L50,70"/><path d="M50,58 C44,63 45,68 50,70"/><path d="M50,58 C56,63 55,68 50,70"/></g>
+<circle cx="50" cy="33" r="1.8" fill="url(#obg)"/><circle cx="50" cy="71" r="1.8" fill="url(#obg)"/>
+<circle cx="50" cy="45" r="2.4" fill="url(#obg)"/><circle cx="50" cy="59" r="2.4" fill="url(#obg)"/></g>
+<circle cx="50" cy="52" r="5.5" fill="url(#obg)"/>
+</g>
 </svg>
