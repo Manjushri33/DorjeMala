@@ -8,6 +8,9 @@ on:
       - 'android/**'
       - '.github/workflows/android.yml'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +23,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # The runner ships a Gradle that is newer than the Android plugin supports,
+      # The runner ships a Gradle newer than the Android plugin supports,
       # so the version is pinned here instead of relying on what is installed.
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -38,14 +41,25 @@ jobs:
         working-directory: android
         run: gradle assembleRelease --no-daemon --stacktrace
 
-      - name: Rename artifact
+      - name: Collect the APK
         run: |
           mkdir -p out
-          cp android/app/build/outputs/apk/release/*.apk "out/DorjeMala-${{ github.run_number }}.apk"
+          cp android/app/build/outputs/apk/release/*.apk out/DorjeMala.apk
+          ls -la out
 
-      - name: Upload APK
+      - name: Upload as a build artifact
         uses: actions/upload-artifact@v4
         with:
           name: DorjeMala-apk
-          path: out/*.apk
+          path: out/DorjeMala.apk
           retention-days: 90
+
+      # Published under a fixed tag so the download link never changes.
+      - name: Publish to the "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest -y --cleanup-tag || true
+          gh release create latest out/DorjeMala.apk \
+            --title "DorjeMala — latest APK" \
+            --notes "Built automatically from the current version of the app. Build #${{ github.run_number }}."
