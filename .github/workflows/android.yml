@@ -20,6 +20,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # The runner ships a Gradle that is newer than the Android plugin supports,
+      # so the version is pinned here instead of relying on what is installed.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
       - name: Copy the web app into the APK assets
         run: |
           mkdir -p android/app/src/main/assets
