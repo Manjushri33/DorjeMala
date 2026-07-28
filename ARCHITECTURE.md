@@ -122,7 +122,9 @@ Without those two rules the approach would be dangerous. With them it is correct
 
 `localStorage` holds about 5 MB. Base64 images take most of it. On overflow `setItem` throws, and the error is **shown to the user** rather than swallowed.
 
-The next step for this problem is a built-in image library (a mantra stores a reference, not a file) and moving user uploads to IndexedDB.
+### 3.4 Export and import
+
+The lifetime statistics screen offers **Save a copy** and **Restore from a copy**. Export writes a JSON file with mantras, retreats, archive, lifetime totals and the day log; import replaces the current state with it. This is the only backup available in the web version and the APK, where Telegram cloud storage does not exist.
 
 ---
 
@@ -289,12 +291,21 @@ The current APK is a WebView wrapper with locally packaged files and only `INTER
 
 | Limitation | Cause | Consequence |
 |---|---|---|
-| Calendar covers 2026 only | table compiled by hand | yearly update |
+| Calendar covers 2026 only | table compiled by hand, in three places | yearly update |
 | Images live in `localStorage` | no separate store yet | practical ceiling around 10–12 mantras with images |
 | No vibration in mobile web on iPhone | Apple exposes no API | works in Telegram on iPhone |
-| No in-app notifications | platform restrictions | everything goes through the bot |
-| Offline only in the APK | no service worker registered | web needs a connection |
+| No notifications in mobile web | push delivery not implemented | Android app notifies on its own; elsewhere the bot does |
 | No screen-reader support | project owner's decision | the app targets sighted users |
+
+### 9.0 Where notifications come from
+
+| Platform | Channel |
+|---|---|
+| Android app | the app itself — a daily alarm checks the built-in calendar, offline, no server |
+| Telegram | the bot, once subscribed from the reminders screen |
+| Web | the bot, if the person uses Telegram — the service worker is registered and can display a push, but nothing sends one yet |
+
+Wiring up web push would require VAPID keys, a subscription stored server-side, and encrypted delivery from the Worker. Until that exists, **the interface must not promise iPhone notifications.**
 
 Page zoom is allowed — the `maximum-scale` restriction was removed, so the interface can be magnified with two fingers.
 

@@ -37,16 +37,44 @@ Everything is stored on the device in browser storage. Nothing is sent to third-
 
 ## Project files
 
+**The three things that actually run**
+
 | File | Purpose |
 |---|---|
-| `index.html` | the entire app in a single file |
-| `dorjemala-bot-worker.js` | Telegram bot, Cloudflare Worker |
-| `imajes/` | source images |
-| `ARCHITECTURE.md` | architecture, data model, design system, build |
-| `CALENDAR-UPDATE.md` | yearly calendar update checklist |
+| `index.html` | the entire web app in a single file — this is the product |
+| `DorjeMala.apk` | the Android build, produced automatically from `index.html` |
+| `dorjemala-bot-worker.js` | the Telegram bot — a Cloudflare Worker |
+
+**Documentation**
+
+| File | Purpose |
+|---|---|
+| `README.md` | this file — start here |
+| `ARCHITECTURE.md` | architecture, data model, design system, how to edit the bundle |
+| `CALENDAR-UPDATE.md` | the yearly calendar update, step by step |
 | `HINTS.md` | contextual help texts for every screen |
-| `UPDATE.bat` | pull the current version from GitHub into the folder |
-| `START.bat` | local server for testing |
+
+**Folders**
+
+| Folder | Contents |
+|---|---|
+| `android/` | the Android project, built by GitHub |
+| `.github/` | the automatic APK build |
+| `imajes/` | source images |
+| `tools/` | local helper scripts, not part of the repository |
+| `archive/` | previous versions of the app, kept in case a rollback is needed |
+
+**Files the website needs next to `index.html`**
+
+`manifest.json`, `sw.js`, `icon.svg` — these must stay in the root; the site loads them by path.
+
+## Helper scripts (`tools/`)
+
+| Script | What it does |
+|---|---|
+| `UPDATE.bat` | pulls the live version from GitHub into this folder; the previous copy goes to `archive/versions/` |
+| `GET-APK.bat` | downloads the latest built APK into this folder |
+| `START.bat` | serves the folder on `localhost:8080` for testing |
 
 ---
 
