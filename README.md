@@ -1,115 +1,75 @@
-# Мала — лічильник мантр
+# DorjeMala — mantra counter
 
-PWA-додаток для буддійської практики: накопичення мантр (напр. 100 000 Ваджрасаттви), ретрити з кількома мантрами, статистика практики. Працює офлайн, усі дані зберігаються локально на пристрої.
+A mantra counter for Buddhist practice: accumulation, retreats, and the Tibetan calendar. Runs as a Telegram Mini App, as a web page, and as an Android app.
 
-## Файли проекту
+**Open:** [manjushri33.github.io/DorjeMala](https://manjushri33.github.io/DorjeMala)
+**Telegram:** [@dorjemala_bot](https://t.me/dorjemala_bot)
 
-| Файл | Призначення |
+---
+
+## Features
+
+**Counter.** Tapping anywhere in the counting area adds one repetition. Every tap gives a short vibration, completing a mala round gives a stronger one, reaching the goal stronger still. This is what lets you count without looking at the screen, with the phone resting in your palm.
+
+**Practice image.** A thangka can be attached to a mantra and becomes the counter background. Pinch with two fingers to magnify up to 4× and study a detail — taps keep counting while zoomed, because practice should not be interrupted.
+
+**Retreats.** A separate period of focused practice with its own dates, mantras and goals. A mantra can be taken from your own list, in which case repetitions count toward both the retreat and your lifetime total. When every goal is reached, the retreat moves to the archive on its own.
+
+**Tibetan calendar.** Guru Rinpoche and Dakini days, full and new moons, the four Düchen festivals, eclipses — each with a description, practice advice and a legend of markers. When creating a retreat, the calendar suggests auspicious start dates.
+
+**Reminders** about special days are delivered by the Telegram bot.
+
+**Statistics.** Lifetime total, progress toward the goal, day streak, a two-week chart, a six-month heat map, and a day-by-day history.
+
+**Two languages** — Ukrainian and English, detected automatically.
+
+---
+
+## Data
+
+Everything is stored on the device in browser storage. Nothing is sent to third-party servers.
+
+**Backup.** Inside Telegram, counters, history and retreats are copied automatically to the user's Telegram cloud storage. This protects against a cache wipe and gives free sync between phone and desktop. Images are not included — they are too large for the 4 KB per-key limit.
+
+**Nothing disappears silently.** A mantra can be removed from the practice screen: it moves to the archive together with everything recited, and can be restored at any time with the same counter and position in the current round. Full deletion, including history, is a separate action behind an explicit warning.
+
+---
+
+## Project files
+
+| File | Purpose |
 |---|---|
-| `index.html` | Весь додаток: розмітка, стилі, логіка. Єдина точка входу |
-| `manifest.json` | PWA-маніфест: назва, іконка, кольори — для встановлення на головний екран |
-| `sw.js` | Service worker: кешування для офлайн-роботи |
-| `icon.svg` | Іконка додатку |
+| `index.html` | the entire app in a single file |
+| `dorjemala-bot-worker.js` | Telegram bot, Cloudflare Worker |
+| `imajes/` | source images |
+| `ARCHITECTURE.md` | architecture, data model, design system, build |
+| `CALENDAR-UPDATE.md` | yearly calendar update checklist |
+| `HINTS.md` | contextual help texts for every screen |
+| `UPDATE.bat` | pull the current version from GitHub into the folder |
+| `START.bat` | local server for testing |
 
-## Функціонал
+---
 
-### Практика (перша вкладка)
+## Running and publishing
 
-Список твоїх постійних мантр. У кожної: назва, текст мантри, зображення (візуалізація), ціль накопичення, розмір мали. Мантри можна додавати (кнопка +), редагувати й видаляти. На картці видно прогрес до цілі; завершені позначаються ✓.
+Locally: `START.bat` serves the folder on `localhost:8080`.
 
-Зверху — картка **«Продовжити»**: остання практика з поточним прогресом, один тап повертає в лічильник.
+Publishing: upload `index.html` to the repository. GitHub Pages refreshes the site within one to three minutes; Telegram and the web version pick it up automatically.
 
-### Ретрити (друга вкладка)
+**GitHub is the single source of truth.** The local folder and the APK are copies made from it, never the other way round. Run `UPDATE.bat` before starting work.
 
-Ретрит — окрема область зі своїм списком мантр, щоб не змішувати з повсякденною практикою. У ретриту: назва, дати початку/кінця (показує скільки днів лишилось), загальний прогрес по всіх цілях, кількість завершених мантр.
+Technical details, the data schema and the rules for editing the bundled file are in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
-Мантру в ретрит можна додати двома способами:
+---
 
-- **Нова** — окремий незалежний лічильник тільки для цього ретриту.
-- **З моїх мантр (спільний лічильник)** — привʼязується до наявної мантри: начитане в ретриті додається й до загального накопичення. Позначається як «спільна».
+## Calendar
 
-Порядок мантр змінюється стрілками ↑↓. Коли ціль мантри досягнута, у лічильнику зʼявляється кнопка **«Наступна →»** — перехід до наступної незавершеної. Завершені ретрити архівуються (кнопка в редагуванні ретриту) — йдуть у розділ «Архів» зі збереженою статистикою.
+The calendar is compiled for 2026 (Rabten, Fire Horse year, Tibetan 2153) and is updated by hand once a year — **in two places at once**: in the app and in the bot. Full checklist in [`CALENDAR-UPDATE.md`](CALENDAR-UPDATE.md).
 
-### Лічильник
+Until the calendar is updated, the app says so honestly instead of showing dates from the wrong year.
 
-- **Тап будь-де по зоні лічильника = +1**, з легкою вібрацією (Android; iOS-браузери вібрацію не підтримують).
-- **«+ мала»** — додає одразу цілу малу (за замовчуванням 108, налаштовується для кожної мантри).
-- **«−1»** — прибрати помилковий тап.
-- На завершенні кожної мали — сильніша вібрація і золотий спалах екрана.
-- Кільце показує прогрес поточної мали; під лічильником — прогрес-бар до цілі з відсотком.
-- **«сесія: +N»** — скільки начитано за поточний сеанс; **«сьогодні: N»** — за день.
-- Якщо є зображення — воно займає всю зону тапу, лічильник поверх. Кнопка **«⛶ Повністю / Заповнити»** перемикає режим: вписати картинку цілком (з полями) або заповнити екран (з обрізанням). Вибір зберігається для кожної мантри.
-- Текст мантри — смужка над зоною тапу, тап по ній розгортає/згортає повний текст.
+---
 
-### Завантаження зображень
+## Images
 
-При виборі файлу відкривається **редактор кадру**: перетягни зображення пальцем, масштабуй повзунком (до 3×), «Готово» зберігає кадр. «Без кадрування» — використати все зображення. Зображення стискаються до 1000px (JPEG), щоб не переповнювати сховище.
-
-### Статистика (по кожній мантрі)
-
-Всього начитано, % від цілі, за сьогодні, серія днів поспіль (streak), стовпчиковий графік за останні 14 днів, історія по днях (останні 60 записів).
-
-### Інше
-
-- **Мови:** українська / англійська, перемикач у шапці (УК/EN).
-- **Тема:** темний мінімалізм, акцент — приглушене золото.
-- **Офлайн:** після першого відкриття працює без інтернету.
-- **Telegram Mini App:** код містить `Telegram.WebApp.ready()/expand()` — при відкритті всередині Telegram розгортається на весь екран.
-
-## Зберігання даних
-
-Все у `localStorage` браузера, ключ `malaCounter.v2` (стара версія `v1` мігрує автоматично при першому відкритті). Структура:
-
-```json
-{
-  "lang": "uk",
-  "last": { "mantraId": "...", "retreatId": null },
-  "mantras": [{
-    "id": "...", "name": "Ваджрасаттва", "text": "ОМ ВАДЖРА...",
-    "image": "data:image/jpeg;base64,...", "fit": "cover",
-    "goal": 100000, "malaSize": 108, "count": 34500,
-    "log": { "2026-07-17": 324 }, "createdAt": 1752700000000
-  }],
-  "retreats": [{
-    "id": "...", "name": "Літній ретрит", "start": "2026-07-20", "end": "2026-08-01",
-    "archived": false,
-    "items": [{ "...як мантра...", "linkId": "id основної мантри або відсутнє" }]
-  }]
-}
-```
-
-`log` — начитане по днях (основа графіків і streak). `linkId` у ретритної мантри означає спільний лічильник: приріст дублюється в основну мантру.
-
-⚠️ Дані живуть у браузері: очищення даних сайту видалить історію. Експорт/бекап — у планах.
-
-## Запуск локально
-
-PWA потребує сервера (не просто відкрити файл):
-
-```
-cd "Mantra Counter"
-python -m http.server 8080
-```
-
-Відкрий http://localhost:8080. З телефона в тій самій Wi-Fi мережі: `http://<IP-компа>:8080`.
-
-## Публікація
-
-Залий 4 файли на будь-який статичний хостинг (GitHub Pages, Netlify, Vercel, Cloudflare Pages). З HTTPS-посилання додаток встановлюється на головний екран телефона як звичайний застосунок.
-
-### Telegram Mini App
-
-1. Опублікуй на HTTPS.
-2. У @BotFather: `/newbot` → створи бота → `/newapp` → вкажи URL, назву, іконку.
-3. Додаток відкривається за посиланням `t.me/твійбот/назвадодатку`.
-
-### Google Play
-
-Той самий код загортається у TWA ([Bubblewrap](https://developer.chrome.com/docs/android/trusted-web-activity/)) або [Capacitor](https://capacitorjs.com/) — виходить .aab для Play Market. Основа спільна.
-
-## Плани / ідеї на майбутнє
-
-- Експорт/імпорт даних (бекап у файл).
-- Синхронізація між пристроями (Telegram CloudStorage або хмара).
-- Редизайн візуального стилю (Claude Design).
-- Нагадування про щоденну практику.
+The thangkas in `imajes/` come from open sources. If you use this project as a base, check the terms of each image separately.
