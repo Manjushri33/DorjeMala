@@ -8,8 +8,8 @@ android {
         applicationId "com.dorjemala.mala"
         minSdk 24
         targetSdk 34
-        versionCode 3
-        versionName "2.1"
+        versionCode 4
+        versionName "2.2"
     }
 
     // A fixed key, kept in the repository on purpose: the app is installed by hand,
@@ -35,4 +35,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+}
+
+dependencies {
+    // Serves the app over an internal https address so the WebView behaves
+    // like a normal browser: blobs, storage and origins all work as expected.
+    implementation 'androidx.webkit:webkit:1.11.0'
 }
