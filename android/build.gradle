@@ -1,5 +1,5 @@
 buildscript {
     repositories { google(); mavenCentral() }
-    dependencies { classpath 'com.android.tools.build:gradle:8.1.4' }
+    dependencies { classpath 'com.android.tools.build:gradle:8.5.2' }
 }
 allprojects { repositories { google(); mavenCentral() } }
