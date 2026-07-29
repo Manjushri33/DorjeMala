@@ -34,8 +34,11 @@ jobs:
         run: |
           mkdir -p android/app/src/main/assets
           cp index.html android/app/src/main/assets/index.html
-          if [ -d imajes ]; then cp -r imajes android/app/src/main/assets/; fi
-          ls -la android/app/src/main/assets
+          # The calendar thangkas are ordinary files the app loads by path,
+          # so they must travel with the APK. imajes/ is the source folder and
+          # is deliberately left out.
+          if [ -d uploads ]; then cp -r uploads android/app/src/main/assets/; fi
+          du -sh android/app/src/main/assets
 
       - name: Build release APK
         working-directory: android
