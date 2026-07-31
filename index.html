@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>DorjeMala — лічильник мантр для Android</title>
+<title>DorjeMala — лічильник мантр</title>
 <meta name="description" content="Лічильник мантр, ретрити й буддійський календар — в одному застосунку. Працює без інтернету, дані залишаються на пристрої.">
 <meta name="theme-color" content="#0a080d">
 <link rel="manifest" href="manifest.json">
@@ -100,14 +100,17 @@
   .shot{flex:0 0 auto;width:186px;height:362px;border-radius:20px;overflow:hidden;
     border:1px solid rgba(255,255,255,.07);background:#100c16;scroll-snap-align:center}
 
-  .steps{margin-top:22px;display:flex;flex-direction:column;gap:1px;
-    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);
-    border-radius:20px;overflow:hidden}
-  .step{display:flex;gap:16px;padding:22px 20px;background:#0d0a12}
-  .step .n{flex:0 0 auto;font-family:'Cormorant Garamond',serif;font-size:26px;
-    color:var(--gold);line-height:1;width:30px}
-  .step h4{margin:0 0 6px;font-size:15.5px;font-weight:700}
-  .step p{margin:0;font-size:14.5px;line-height:1.6;color:#8d8698}
+  /* Same rhythm as the feature cards above: separate rounded cards, a round
+     badge on the left, everything on one optical line. */
+  .steps{margin-top:22px;display:flex;flex-direction:column;gap:12px}
+  .step{display:flex;align-items:center;gap:16px;padding:22px 20px;border-radius:20px;
+    background:linear-gradient(180deg,#16111e,#100c16);border:1px solid rgba(255,255,255,.055)}
+  .step .n{flex:0 0 auto;width:40px;height:40px;border-radius:50%;
+    background:rgba(217,182,120,.1);border:1px solid rgba(217,182,120,.24);
+    display:grid;place-items:center;font-family:'Cormorant Garamond',serif;
+    font-size:19px;line-height:1;color:var(--gold)}
+  .step h4{margin:0 0 6px;font-size:17.5px;font-weight:800;letter-spacing:-.02em}
+  .step p{margin:0;font-size:15px;line-height:1.6;color:#a9a2b4;text-wrap:pretty}
 
   .quote{position:relative;overflow:hidden;border-radius:24px;
     border:1px solid rgba(217,182,120,.2);
@@ -304,13 +307,13 @@
   </section>
 
   <section>
-    <p class="sechead" data-t="stepsTitleApk"></p>
+    <p class="sechead" data-t="stepsTitle"></p>
     <div class="steps">
-      <div class="step"><div class="n">01</div>
+      <div class="step"><div class="n">1</div>
         <div><h4 data-t="s1t"></h4><p data-t="s1d"></p></div></div>
-      <div class="step"><div class="n">02</div>
+      <div class="step"><div class="n">2</div>
         <div><h4 data-t="s2t"></h4><p data-t="s2d"></p></div></div>
-      <div class="step"><div class="n">03</div>
+      <div class="step"><div class="n">3</div>
         <div><h4 data-t="s3t"></h4><p data-t="s3d"></p></div></div>
     </div>
   </section>
@@ -325,7 +328,6 @@
   <footer>
     <div class="foot">
       <span>DorjeMala · 2026</span>
-      <span data-t="req"></span>
     </div>
   </footer>
 
@@ -336,11 +338,9 @@
 
   <div class="ctabar">
     <div class="ctarow">
-      <button class="cta" id="install" type="button" hidden></button>
-      <a class="cta" id="cta"
-         href="https://github.com/Manjushri33/DorjeMala/releases/download/latest/DorjeMala.apk"></a>
+      <a class="cta" id="install" href="app.html"></a>
     </div>
-    <div class="ctanote" id="ctanote" hidden></div>
+    <div class="ctanote" id="ctanote"></div>
   </div>
 </div>
 
@@ -364,15 +364,14 @@
       f3t: 'Буддійський календар', f3d: 'Переглядай важливі буддійські дати, дні практик і свят.',
       insideTitle: 'Всередині',
       stepsTitle: 'Встановлення — три кроки',
-      stepsTitleApk: 'Якщо ставиш APK — три кроки',
-      s1t: 'Завантаж файл', s1d: 'Натисни «Завантажити APK» — файл збережеться у теку завантажень.',
-      s2t: 'Дозволь встановлення', s2d: 'Android запитає дозвіл на встановлення з невідомого джерела — підтверди його.',
+      stepsTitle: 'Встановлення — три кроки',
+      s1t: 'Натисни «Встановити»', s1d: 'Браузер запитає підтвердження. Нічого не завантажується, файлів шукати не треба.',
+      s2t: 'Іконка на екрані', s2d: 'Застосунок відкривається як звичайний, на весь екран. Оновлення приходять самі.',
       s3t: 'Обери мову', s3d: 'При першому запуску застосунок спитає мову й запропонує тур, який створить першу мантру.',
       quote: 'Працює без інтернету. Дані залишаються на твоєму пристрої.',
-      cta: 'Завантажити APK', install: 'Встановити',
-      ctanote: 'Встановлений застосунок оновлюється сам. APK доведеться оновлювати вручну.',
+      install: 'Встановити', open: 'Відкрити',
+      ctanote: 'Без завантажень і без реєстрації.',
       qrT: 'Це для телефона', qrD: 'Наведи камеру — і відкриєш сторінку там.',
-      req: 'Android 7.0 і новіший · 2,3 МБ',
       mock: { practice: 'Практика', cont: 'Ваджрасаттва', contn: '34 500 · продовжити',
         m1: 'Авалокітешвара', m1t: 'ОМ МАНІ ПАДМЕ ХУМ', m1n: '12 400 / 100 000',
         m2: 'Тара', m2t: 'ОМ ТАРЕ ТУТТАРЕ', m2n: '3 208 / 21 000',
@@ -394,15 +393,14 @@
       f3t: 'Buddhist calendar', f3d: 'See important Buddhist dates, practice days and holidays.',
       insideTitle: 'Inside',
       stepsTitle: 'Install in three steps',
-      stepsTitleApk: 'Installing the APK — three steps',
-      s1t: 'Download the file', s1d: 'Tap “Download APK” — the file lands in your downloads folder.',
-      s2t: 'Allow the install', s2d: 'Android will ask permission to install from an unknown source — confirm it.',
+      stepsTitle: 'Installing — three steps',
+      s1t: 'Tap “Install”', s1d: 'The browser asks you to confirm. Nothing is downloaded, no file to hunt for.',
+      s2t: 'An icon appears', s2d: 'It opens like any other app, full screen. Updates arrive on their own.',
       s3t: 'Pick a language', s3d: 'On first launch the app asks for a language and offers a tour that creates your first mantra.',
       quote: 'Works offline. Your data stays on your device.',
-      cta: 'Download APK', install: 'Install',
-      ctanote: 'The installed app updates itself. The APK you would update by hand.',
+      install: 'Install', open: 'Open',
+      ctanote: 'No downloads, no sign-up.',
       qrT: 'This one is for a phone', qrD: 'Point your camera to open the page there.',
-      req: 'Android 7.0 and newer · 2.3 MB',
       mock: { practice: 'Practice', cont: 'Vajrasattva', contn: '34,500 · continue',
         m1: 'Avalokiteshvara', m1t: 'OM MANI PADME HUM', m1n: '12,400 / 100,000',
         m2: 'Tara', m2t: 'OM TARE TUTTARE', m2n: '3,208 / 21,000',
@@ -515,6 +513,7 @@
       '<div class="note">' + m.calnote + '</div>';
   }
 
+  var deferred = null;
   var saved = null;
   try { saved = localStorage.getItem('dm_site_lang'); } catch (e) {}
   var lang = saved || (/^(uk|ru)/i.test(navigator.language || '') ? 'uk' : 'en');
@@ -525,9 +524,12 @@
     document.querySelectorAll('[data-t]').forEach(function (el) {
       el.textContent = t[el.getAttribute('data-t')];
     });
-    document.getElementById('cta').textContent = t.cta;
-    document.getElementById('install').textContent = t.install;
-    document.getElementById('ctanote').textContent = t.ctanote;
+    // Installable — offer the install. Not installable (iPhone, Firefox, a
+    // desktop that already has it) — offer to just open it, rather than a
+    // button that would do nothing.
+    var canInstall = !!deferred;
+    document.getElementById('install').textContent = canInstall ? t.install : t.open;
+    document.getElementById('ctanote').textContent = canInstall ? t.ctanote : '';
     document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
     document.getElementById('en').className = lang === 'en' ? 'on' : '';
     document.getElementById('mockHome').innerHTML = screenHome(m);
@@ -548,32 +550,24 @@
     });
   }
 
-  // The install button only appears once Chrome confirms the page is installable.
-  // If that never happens, the visitor simply sees the APK button alone rather
-  // than a button that does nothing.
-  var deferred = null;
   var installBtn = document.getElementById('install');
-  var note = document.getElementById('ctanote');
 
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
     deferred = e;
-    installBtn.hidden = false;
-    note.hidden = false;
-    document.getElementById('cta').classList.add('second');
+    draw();
   });
 
   window.addEventListener('appinstalled', function () {
     deferred = null;
-    installBtn.hidden = true;
-    note.hidden = true;
-    document.getElementById('cta').classList.remove('second');
+    draw();
   });
 
-  installBtn.onclick = function () {
-    if (!deferred) return;
+  installBtn.onclick = function (e) {
+    if (!deferred) return;              // no prompt to show — follow the href
+    e.preventDefault();
     deferred.prompt();
-    deferred.userChoice.then(function () { deferred = null; });
+    deferred.userChoice.then(function () { deferred = null; draw(); });
   };
 
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
