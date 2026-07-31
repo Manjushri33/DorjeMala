@@ -6,6 +6,7 @@
 <title>DorjeMala — лічильник мантр для Android</title>
 <meta name="description" content="Лічильник мантр, ретрити й буддійський календар — в одному застосунку. Працює без інтернету, дані залишаються на пристрої.">
 <meta name="theme-color" content="#0a080d">
+<link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:title" content="DorjeMala — лічильник мантр">
@@ -30,7 +31,7 @@
 
   body{color:#efe9f2;font-family:Manrope,system-ui,sans-serif;min-height:100vh;
     display:flex;justify-content:center}
-  .page{width:100%;max-width:480px;position:relative;background:#0a080d;padding-bottom:104px}
+  .page{width:100%;max-width:480px;position:relative;background:#0a080d;padding-bottom:158px}
   .hero{position:relative;overflow:hidden;
     background:radial-gradient(120% 80% at 50% -10%,#291d35 0%,#16111f 45%,#0a080d 100%)}
   .halo{position:absolute;top:-220px;left:50%;width:460px;height:460px;border-radius:50%;
@@ -121,11 +122,34 @@
     font-size:13px;color:#6f697b}
   .foot a{color:#6f697b}
 
-  .ctabar{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;
-    padding:14px 22px calc(16px + env(safe-area-inset-bottom));
-    background:linear-gradient(180deg,rgba(10,8,13,0) 0%,rgba(10,8,13,.92) 38%,#0a080d 100%);
+  /* Desktop only: the app is for a phone, so hand the page over to one.
+     Hidden below 900px, where the visitor is already holding the phone. */
+  .qr{display:none}
+  @media (min-width:900px){
+    .qr{display:flex;position:fixed;right:28px;bottom:28px;z-index:25;gap:14px;
+      align-items:center;padding:14px;border-radius:18px;
+      background:linear-gradient(180deg,#16111e,#100c16);
+      border:1px solid rgba(255,255,255,.07);box-shadow:0 18px 46px rgba(0,0,0,.55)}
+    .qr .code{width:104px;height:104px;border-radius:10px;background:var(--gold);
+      padding:8px;flex:none}
+    .qr .code img{width:100%;height:100%;display:block}
+    .qr .say{max-width:158px;font-size:12.5px;line-height:1.5;color:#a9a2b4;text-wrap:pretty}
+    .qr .say b{display:block;color:#efe9f2;font-size:13.5px;font-weight:800;margin-bottom:4px}
+  }
+
+  .ctabar{position:fixed;bottom:0;left:0;right:0;display:flex;flex-direction:column;
+    align-items:center;gap:9px;padding:14px 22px calc(16px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(10,8,13,0) 0%,rgba(10,8,13,.92) 30%,#0a080d 100%);
     pointer-events:none;z-index:20}
-  .cta{pointer-events:auto;width:100%;max-width:436px;min-height:58px;display:flex;
+  /* Two honest routes side by side: the installed app updates itself, the file
+     does not. The note under them says exactly that, in one line. */
+  .ctarow{display:flex;gap:9px;width:100%;max-width:436px}
+  .ctanote{pointer-events:auto;max-width:436px;font-size:11.5px;line-height:1.45;
+    color:#6f697b;text-align:center;text-wrap:pretty}
+  .cta.second{background:transparent;color:var(--gold);border:1px solid rgba(217,182,120,.34);
+    box-shadow:none;font-weight:700;font-size:15px}
+  .cta.second:hover{box-shadow:none;background:rgba(217,182,120,.07);color:var(--gold-soft)}
+  .cta{pointer-events:auto;flex:1;width:100%;max-width:436px;min-height:58px;display:flex;
     align-items:center;justify-content:center;gap:10px;border-radius:16px;
     background:linear-gradient(180deg,#e8cd97,#cfa863);color:#1a1208;font-size:17px;
     font-weight:800;letter-spacing:-.01em;box-shadow:0 12px 34px rgba(217,182,120,.26);
@@ -277,7 +301,7 @@
   </section>
 
   <section>
-    <p class="sechead" data-t="stepsTitle"></p>
+    <p class="sechead" data-t="stepsTitleApk"></p>
     <div class="steps">
       <div class="step"><div class="n">01</div>
         <div><h4 data-t="s1t"></h4><p data-t="s1d"></p></div></div>
@@ -302,9 +326,18 @@
     </div>
   </footer>
 
+  <aside class="qr">
+    <div class="code"><img src="qr.svg" width="104" height="104" alt=""></div>
+    <div class="say"><b data-t="qrT"></b><span data-t="qrD"></span></div>
+  </aside>
+
   <div class="ctabar">
-    <a class="cta" id="cta"
-       href="https://github.com/Manjushri33/DorjeMala/releases/download/latest/DorjeMala.apk"></a>
+    <div class="ctarow">
+      <button class="cta" id="install" type="button" hidden></button>
+      <a class="cta" id="cta"
+         href="https://github.com/Manjushri33/DorjeMala/releases/download/latest/DorjeMala.apk"></a>
+    </div>
+    <div class="ctanote" id="ctanote" hidden></div>
   </div>
 </div>
 
@@ -328,11 +361,14 @@
       f3t: 'Буддійський календар', f3d: 'Переглядай важливі буддійські дати, дні практик і свят.',
       insideTitle: 'Всередині',
       stepsTitle: 'Встановлення — три кроки',
-      s1t: 'Завантаж файл', s1d: 'Натисни «Завантажити APK». Браузер попередить, що файл може зашкодити — так він каже про все, що не з Play Маркету. Обери «Все одно завантажити».',
-      s2t: 'Дозволь встановлення', s2d: 'Відкрий завантажений файл. Android попросить дозволити встановлення з цього джерела, а потім кілька десятків секунд перевірятиме застосунок — це нормально.',
-      s3t: 'Обери мову й додай мантру', s3d: 'При першому запуску застосунок спитає мову й запропонує короткий тур — він створить першу мантру за тебе. Реєстрація не потрібна.',
+      stepsTitleApk: 'Якщо ставиш APK — три кроки',
+      s1t: 'Завантаж файл', s1d: 'Натисни «Завантажити APK» — файл збережеться у теку завантажень.',
+      s2t: 'Дозволь встановлення', s2d: 'Android запитає дозвіл на встановлення з невідомого джерела — підтверди його.',
+      s3t: 'Обери мову', s3d: 'При першому запуску застосунок спитає мову й запропонує тур, який створить першу мантру.',
       quote: 'Працює без інтернету. Дані залишаються на твоєму пристрої.',
-      cta: 'Завантажити APK',
+      cta: 'Завантажити APK', install: 'Встановити',
+      ctanote: 'Встановлений застосунок оновлюється сам. APK доведеться оновлювати вручну.',
+      qrT: 'Це для телефона', qrD: 'Наведи камеру — і відкриєш сторінку там.',
       req: 'Android 7.0 і новіший · 2,3 МБ',
       mock: { practice: 'Практика', cont: 'Ваджрасаттва', contn: '34 500 · продовжити',
         m1: 'Авалокітешвара', m1t: 'ОМ МАНІ ПАДМЕ ХУМ', m1n: '12 400 / 100 000',
@@ -355,11 +391,14 @@
       f3t: 'Buddhist calendar', f3d: 'See important Buddhist dates, practice days and holidays.',
       insideTitle: 'Inside',
       stepsTitle: 'Install in three steps',
-      s1t: 'Download the file', s1d: 'Tap “Download APK”. The browser will warn that the file may harm your device — it says that about anything not from Play. Choose “Download anyway”.',
-      s2t: 'Allow the install', s2d: 'Open the downloaded file. Android will ask permission to install from this source, then spend half a minute scanning the app — that is normal.',
-      s3t: 'Pick a language, add a mantra', s3d: 'On first launch the app asks for a language and offers a short tour, which creates your first mantra for you. No sign-up needed.',
+      stepsTitleApk: 'Installing the APK — three steps',
+      s1t: 'Download the file', s1d: 'Tap “Download APK” — the file lands in your downloads folder.',
+      s2t: 'Allow the install', s2d: 'Android will ask permission to install from an unknown source — confirm it.',
+      s3t: 'Pick a language', s3d: 'On first launch the app asks for a language and offers a tour that creates your first mantra.',
       quote: 'Works offline. Your data stays on your device.',
-      cta: 'Download APK',
+      cta: 'Download APK', install: 'Install',
+      ctanote: 'The installed app updates itself. The APK you would update by hand.',
+      qrT: 'This one is for a phone', qrD: 'Point your camera to open the page there.',
       req: 'Android 7.0 and newer · 2.3 MB',
       mock: { practice: 'Practice', cont: 'Vajrasattva', contn: '34,500 · continue',
         m1: 'Avalokiteshvara', m1t: 'OM MANI PADME HUM', m1n: '12,400 / 100,000',
@@ -484,6 +523,8 @@
       el.textContent = t[el.getAttribute('data-t')];
     });
     document.getElementById('cta').textContent = t.cta;
+    document.getElementById('install').textContent = t.install;
+    document.getElementById('ctanote').textContent = t.ctanote;
     document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
     document.getElementById('en').className = lang === 'en' ? 'on' : '';
     document.getElementById('mockHome').innerHTML = screenHome(m);
@@ -502,6 +543,38 @@
       el.style.transform = k === 1 ? '' : 'scale(' + k + ')';
       el.style.height = (box.height / k) + 'px';
     });
+  }
+
+  // The install button only appears once Chrome confirms the page is installable.
+  // If that never happens, the visitor simply sees the APK button alone rather
+  // than a button that does nothing.
+  var deferred = null;
+  var installBtn = document.getElementById('install');
+  var note = document.getElementById('ctanote');
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    installBtn.hidden = false;
+    note.hidden = false;
+    document.getElementById('cta').classList.add('second');
+  });
+
+  window.addEventListener('appinstalled', function () {
+    deferred = null;
+    installBtn.hidden = true;
+    note.hidden = true;
+    document.getElementById('cta').classList.remove('second');
+  });
+
+  installBtn.onclick = function () {
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function () { deferred = null; });
+  };
+
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
   }
 
   function pick(l) {
