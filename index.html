@@ -3,202 +3,473 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>DorjeMala — лічильник мантр</title>
-<meta name="description" content="Лічильник мантр для буддійської практики: накопичення, ретрити й тибетський календар. Працює без інтернету, дані залишаються на пристрої.">
-<meta name="theme-color" content="#12121a">
-<link rel="manifest" href="manifest.json">
+<title>DorjeMala — лічильник мантр для Android</title>
+<meta name="description" content="Лічильник мантр, ретрити й буддійський календар — в одному застосунку. Працює без інтернету, дані залишаються на пристрої.">
+<meta name="theme-color" content="#0a080d">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="DorjeMala">
 <meta property="og:title" content="DorjeMala — лічильник мантр">
-<meta property="og:description" content="Лічильник мантр для буддійської практики: накопичення, ретрити й тибетський календар.">
+<meta property="og:description" content="Лічильник мантр, ретрити й буддійський календар — в одному застосунку.">
 <meta property="og:image" content="icon-512.png">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&display=swap&subset=cyrillic,latin" rel="stylesheet">
 <style>
+  html,body{margin:0;padding:0;background:#0a080d}
+  :root{--gold:#d9b678;--gold-soft:#e8d3a8}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;padding:0;background:#0b0a10}
-  body{
-    min-height:100dvh;color:#f6f4fb;
-    font:400 15px/1.5 Manrope,system-ui,sans-serif;
-    background:linear-gradient(180deg,#100e18,#0b0a10);
-    display:flex;flex-direction:column;align-items:center;
-    padding:calc(28px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom));
-  }
-  .glow{position:fixed;left:-20%;right:-20%;top:-8%;height:52%;pointer-events:none;
-    background:radial-gradient(55% 55% at 50% 30%,rgba(201,168,106,.13),transparent 70%);
-    animation:breathe 9s ease-in-out infinite}
-  @keyframes breathe{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-  main{width:100%;max-width:400px;position:relative;display:flex;flex-direction:column;
-    flex:1;justify-content:center}
-  .lang{position:absolute;top:-6px;right:0;font:600 12px/1 Manrope,sans-serif;
-    color:rgba(232,230,240,.7);padding:9px 15px;border-radius:20px;
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer}
-  .top{text-align:center;padding-top:14px}
-  .top img{width:88px;height:88px;border-radius:24px;animation:breathe 6s ease-in-out infinite}
-  h1{font:700 27px/1.1 Manrope,sans-serif;letter-spacing:.3px;margin:14px 0 0}
-  h1 span{color:#e0c48a}
-  .sub{font:italic 500 15.5px/1.35 'Cormorant Garamond',serif;color:rgba(224,196,138,.85);margin-top:5px}
-  ul{list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
-  li{display:flex;gap:12px;align-items:center;padding:11px 13px;border-radius:16px;
+  a{color:var(--gold);text-decoration:none}
+  a:hover{color:var(--gold-soft)}
+  ::selection{background:rgba(217,182,120,.28)}
+  .dm-scroll{scrollbar-width:none;-ms-overflow-style:none}
+  .dm-scroll::-webkit-scrollbar{display:none}
+  @keyframes dm-breathe{0%,100%{transform:translateX(-50%) translateY(0) scale(1);opacity:.6}
+    50%{transform:translateX(-50%) translateY(-8px) scale(1.04);opacity:.85}}
+  @keyframes dm-spin{to{transform:rotate(360deg)}}
+
+  body{color:#efe9f2;font-family:Manrope,system-ui,sans-serif;min-height:100vh;
+    display:flex;justify-content:center}
+  .page{width:100%;max-width:480px;position:relative;background:#0a080d;padding-bottom:104px}
+  .hero{position:relative;overflow:hidden;
+    background:radial-gradient(120% 80% at 50% -10%,#291d35 0%,#16111f 45%,#0a080d 100%)}
+  .halo{position:absolute;top:-220px;left:50%;width:460px;height:460px;border-radius:50%;
+    background:radial-gradient(circle,rgba(217,182,120,.2) 0%,rgba(217,182,120,0) 64%);
+    animation:dm-breathe 9s ease-in-out infinite;pointer-events:none}
+  .bar{position:relative;padding:22px 22px 0;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px}
+  .mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(160deg,#1b1524,#0d0a12);
+    border:1px solid rgba(217,182,120,.28);display:grid;place-items:center}
+  /* A mala of beads turning around a vajra — the app's own mark, not a generic
+     dot in a ring. Only the beads rotate; the vajra stays upright. */
+  .mark i{position:relative;width:23px;height:23px;display:grid;place-items:center}
+  .mark i .beads{position:absolute;inset:0;animation:dm-spin 44s linear infinite}
+  .mark i .vajra{position:relative;width:13px;height:13px}
+  .wordmark{font-size:16px;font-weight:800;letter-spacing:-.01em}
+  .wordmark span{color:var(--gold)}
+  .langs{display:flex;align-items:center;gap:2px;padding:3px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)}
+  .langs button{appearance:none;border:0;cursor:pointer;font-family:inherit;font-size:12px;
+    font-weight:700;letter-spacing:.06em;padding:7px 12px;border-radius:999px;
+    transition:all .18s ease;background:transparent;color:#7d7688}
+  .langs button.on{background:rgba(217,182,120,.16);color:var(--gold)}
+  .top{position:relative;padding:40px 22px;text-align:center}
+  .iconwrap{display:grid;place-items:center}
+  .iconbox{position:relative;width:104px;height:104px;border-radius:30px;
+    background:linear-gradient(165deg,#221a2d,#0e0a13);border:1px solid rgba(217,182,120,.3);
+    box-shadow:0 22px 50px rgba(0,0,0,.6);overflow:hidden}
+  .iconbox img{width:100%;height:100%;display:block}
+  h1{margin:28px 0 0;font-size:38px;line-height:1.06;font-weight:800;
+    letter-spacing:-.035em;text-wrap:balance}
+  h1 em{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    color:var(--gold);letter-spacing:-.005em}
+  .lead{margin:18px auto 0;max-width:340px;font-size:16px;line-height:1.6;
+    color:#a9a2b4;text-wrap:pretty}
+  .chips{margin-top:30px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+    font-size:12.5px;color:#7d7688}
+  .chips span{padding:7px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.09);
+    background:rgba(255,255,255,.02)}
+  .phonewrap{position:relative;padding:0 22px;display:flex;justify-content:center}
+  .phone{width:238px;padding:9px 9px 0;border-radius:34px 34px 0 0;
+    background:linear-gradient(165deg,rgba(217,182,120,.36),rgba(217,182,120,.06) 50%,rgba(255,255,255,.03));
+    box-shadow:0 -10px 60px rgba(0,0,0,.5)}
+  .phone .glass{border-radius:27px 27px 0 0;overflow:hidden;background:#100c16;height:300px}
+
+  section{padding:56px 22px 0}
+  .sechead{margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:23px;color:var(--gold)}
+  .cards{margin-top:22px;display:flex;flex-direction:column;gap:12px}
+  article{display:flex;gap:16px;padding:22px 20px;border-radius:20px;
+    background:linear-gradient(180deg,#16111e,#100c16);border:1px solid rgba(255,255,255,.055)}
+  .bullet{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:rgba(217,182,120,.1);
+    border:1px solid rgba(217,182,120,.24);display:grid;place-items:center}
+  /* The same three glyphs the app shows on its own welcome screen. */
+  .bullet b{font-size:17px;line-height:1;color:var(--gold);font-weight:400}
+  article h3{margin:2px 0 7px;font-size:17.5px;font-weight:800;letter-spacing:-.02em}
+  article p{margin:0;font-size:15px;line-height:1.6;color:#a9a2b4;text-wrap:pretty}
+
+  .inside{padding:56px 0 0}
+  .inside .sechead{margin:0 22px}
+  .gallery{margin-top:20px;display:flex;gap:14px;overflow-x:auto;padding:0 22px 4px;
+    scroll-snap-type:x mandatory}
+  .shot{flex:0 0 auto;width:186px;height:362px;border-radius:20px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.07);background:#100c16;scroll-snap-align:center}
+
+  .steps{margin-top:22px;display:flex;flex-direction:column;gap:1px;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);
+    border-radius:20px;overflow:hidden}
+  .step{display:flex;gap:16px;padding:22px 20px;background:#0d0a12}
+  .step .n{flex:0 0 auto;font-family:'Cormorant Garamond',serif;font-size:26px;
+    color:var(--gold);line-height:1;width:30px}
+  .step h4{margin:0 0 6px;font-size:15.5px;font-weight:700}
+  .step p{margin:0;font-size:14.5px;line-height:1.6;color:#8d8698}
+
+  .quote{position:relative;overflow:hidden;border-radius:24px;
+    border:1px solid rgba(217,182,120,.2);
+    background:radial-gradient(110% 130% at 50% 0%,#291d35 0%,#16111f 55%,#0d0a12 100%);
+    padding:44px 26px;text-align:center}
+  .quote .halo2{position:absolute;top:-140px;left:50%;transform:translateX(-50%);
+    width:360px;height:360px;border-radius:50%;
+    background:radial-gradient(circle,rgba(217,182,120,.16) 0%,rgba(217,182,120,0) 65%);
+    pointer-events:none}
+  .quote p{position:relative;margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:26px;line-height:1.32;color:#efe9f2;text-wrap:balance}
+
+  footer{margin-top:44px;border-top:1px solid rgba(255,255,255,.06)}
+  .foot{padding:22px;display:flex;align-items:center;justify-content:space-between;
+    font-size:13px;color:#6f697b}
+  .foot a{color:#6f697b}
+
+  .ctabar{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;
+    padding:14px 22px calc(16px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(10,8,13,0) 0%,rgba(10,8,13,.92) 38%,#0a080d 100%);
+    pointer-events:none;z-index:20}
+  .cta{pointer-events:auto;width:100%;max-width:436px;min-height:58px;display:flex;
+    align-items:center;justify-content:center;gap:10px;border-radius:16px;
+    background:linear-gradient(180deg,#e8cd97,#cfa863);color:#1a1208;font-size:17px;
+    font-weight:800;letter-spacing:-.01em;box-shadow:0 12px 34px rgba(217,182,120,.26);
+    transition:box-shadow .2s,transform .12s}
+  .cta:hover{box-shadow:0 16px 44px rgba(217,182,120,.38);color:#1a1208}
+  .cta:active{transform:scale(.985)}
+
+  /* ─────────── screen mock-ups ───────────
+     Drawn, not photographed: the app's own palette and layout, so the page can
+     ship before real screenshots exist. Built at 186px wide and scaled to fit
+     whatever slot they sit in. */
+  .mock{width:186px;transform-origin:top left;font-family:Manrope,sans-serif;
+    background:linear-gradient(180deg,#100e18,#0b0a10);height:362px;overflow:hidden;
+    position:relative;color:#f2f0f8}
+  .mock .glow{position:absolute;left:-20%;right:-20%;top:-8%;height:46%;pointer-events:none;
+    background:radial-gradient(55% 55% at 50% 30%,rgba(201,168,106,.13),transparent 70%)}
+  .mock .hd{position:relative;display:flex;align-items:center;padding:14px 12px 10px}
+  .mock .hd .ttl{flex:1;font-size:13px;font-weight:800;letter-spacing:.1px}
+  .mock .dot{width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.06);
+    margin-left:4px}
+  .mock .dot.g{background:linear-gradient(135deg,#d8b578,#c9a86a)}
+  .mock .card{margin:0 12px 8px;border-radius:11px;padding:9px 10px;
     background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}
-  .ic{width:38px;height:38px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
-    font-size:17px;color:#e0c48a;border:1px solid rgba(201,168,106,.28);
-    background:radial-gradient(circle at 35% 30%,rgba(201,168,106,.22),rgba(201,168,106,.08))}
-  .t{font:700 14.5px/1.25 Manrope,sans-serif;color:#f2f0f8}
-  .d{font:400 11.5px/1.45 Manrope,sans-serif;color:rgba(232,230,240,.55);margin-top:3px;text-wrap:pretty}
-  .actions{margin-top:28px}
-  .cta{display:block;width:100%;border:0;padding:16px;border-radius:17px;
-    background:linear-gradient(135deg,#d8b578,#c9a86a);color:#221a08;
-    font:700 15.5px/1 Manrope,sans-serif;text-align:center;text-decoration:none;cursor:pointer;
-    box-shadow:0 6px 22px rgba(201,168,106,.32);transition:transform .12s}
-  .cta:active{transform:scale(.97)}
-  .hint{font:400 12.5px/1.5 Manrope,sans-serif;color:rgba(232,230,240,.5);
-    margin-top:12px;text-align:center;text-wrap:pretty}
-  .hint b{color:rgba(232,230,240,.8);font-weight:600}
-  .alt{display:block;margin-top:12px;padding:11px;text-align:center;text-decoration:none;
-    font:600 13.5px/1 Manrope,sans-serif;color:rgba(224,196,138,.85)}
-  .foot{margin-top:16px;text-align:center;font:400 12px/1.6 Manrope,sans-serif;color:rgba(232,230,240,.38)}
-  .foot a{color:rgba(232,230,240,.55);text-decoration:none;border-bottom:1px solid rgba(232,230,240,.18)}
-  .privacy{margin-top:14px;text-align:center;font:400 12px/1.5 Manrope,sans-serif;color:rgba(232,230,240,.42)}
+  .mock .card .nm{font-size:9.5px;font-weight:700}
+  .mock .card .tx{font-size:7.5px;color:rgba(232,230,240,.5);margin-top:2px}
+  .mock .card .num{font-size:9px;color:#e0c48a;font-weight:700;margin-top:5px}
+  .mock .prog{height:3px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:5px;
+    overflow:hidden}
+  .mock .prog i{display:block;height:100%;background:linear-gradient(90deg,#d8b578,#c9a86a)}
+  .mock .big{margin:0 12px 8px;height:96px;border-radius:14px;position:relative;
+    overflow:hidden;border:1px solid rgba(201,168,106,.3)}
+  .mock .big .bg{position:absolute;inset:0;
+    background:radial-gradient(70% 70% at 50% 30%,#3a2c46,#191322 70%,#0e0b14)}
+  .mock .big .sh{position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(10,9,15,.05) 15%,rgba(10,9,15,.92))}
+  .mock .big .cap{position:absolute;left:10px;right:10px;bottom:9px}
+  .mock .tabs{position:absolute;left:0;right:0;bottom:0;display:flex;padding:8px 10px 11px;
+    gap:2px;background:linear-gradient(180deg,rgba(11,10,16,0),rgba(11,10,16,.95) 40%)}
+  .mock .tabs div{flex:1;text-align:center;font-size:6.5px;color:rgba(232,230,240,.35)}
+  .mock .tabs div.on{color:#e0c48a}
+  .mock .tabs em{display:block;width:11px;height:11px;border-radius:4px;margin:0 auto 3px;
+    background:rgba(255,255,255,.08)}
+  .mock .tabs div.on em{background:rgba(201,168,106,.3)}
+  .mock .count{text-align:center;margin-top:22px}
+  .mock .count .n{font-size:38px;font-weight:800;letter-spacing:-1.5px;line-height:1}
+  .mock .count .s{font-size:8px;color:rgba(232,230,240,.5);margin-top:5px}
+  .mock .ring{display:block;margin:14px auto 0}
+  .mock .capt{position:absolute;left:12px;right:12px;bottom:16px}
+  .mock .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:0 12px}
+  .mock .cal b{aspect-ratio:1;border-radius:5px;display:grid;place-items:center;
+    font-size:7.5px;font-weight:500;color:rgba(232,230,240,.55);
+    background:rgba(255,255,255,.028);position:relative}
+  .mock .cal b.m::after{content:"";position:absolute;bottom:2px;width:3px;height:3px;
+    border-radius:50%;background:#e0c48a}
+  .mock .cal b.now{background:linear-gradient(135deg,#d8b578,#c9a86a);color:#221a08;font-weight:800}
+  .mock .cal b.o{opacity:.25}
+  .mock .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:0 12px 5px;
+    font-size:6.5px;color:rgba(232,230,240,.3);text-align:center}
+  .mock .note{margin:9px 12px 0;border-radius:9px;padding:7px 8px;
+    background:rgba(201,168,106,.09);border:1px solid rgba(201,168,106,.22);
+    font-size:7.5px;line-height:1.4;color:rgba(232,230,240,.8)}
 </style>
 </head>
 <body>
-<div class="glow"></div>
-<main>
-  <div class="lang" id="lang">EN</div>
+<div class="page">
 
-  <div class="top">
-    <img src="icon-512.png" width="88" height="88" alt="DorjeMala">
-    <h1>Dorje<span>Mala</span></h1>
-    <div class="sub" id="sub"></div>
-  </div>
+  <div class="hero">
+    <div class="halo"></div>
 
-  <ul id="rows"></ul>
-  <div class="privacy" id="privacy"></div>
+    <div class="bar">
+      <div class="brand">
+        <div class="mark"><i>
+          <svg class="beads" viewBox="0 0 23 23" fill="var(--gold)" aria-hidden="true">
+            <circle cx="11.5" cy="1.6" r="1.05"/><circle cx="18.5" cy="4.5" r="1.05"/>
+            <circle cx="21.4" cy="11.5" r="1.05"/><circle cx="18.5" cy="18.5" r="1.05"/>
+            <circle cx="11.5" cy="21.4" r="1.05"/><circle cx="4.5" cy="18.5" r="1.05"/>
+            <circle cx="1.6" cy="11.5" r="1.05"/><circle cx="4.5" cy="4.5" r="1.05"/>
+          </svg>
+          <svg class="vajra" viewBox="0 0 100 100" fill="none" stroke="var(--gold)"
+               stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M50,42 L50,26"/><path d="M50,44 C41,36 43,28 50,26"/>
+            <path d="M50,44 C59,36 57,28 50,26"/>
+            <path d="M50,58 L50,74"/><path d="M50,56 C41,64 43,72 50,74"/>
+            <path d="M50,56 C59,64 57,72 50,74"/>
+            <path d="M42,50 L26,50"/><path d="M44,50 C36,41 28,43 26,50"/>
+            <path d="M44,50 C36,59 28,57 26,50"/>
+            <path d="M58,50 L74,50"/><path d="M56,50 C64,41 72,43 74,50"/>
+            <path d="M56,50 C64,59 72,57 74,50"/>
+            <circle cx="50" cy="50" r="7" fill="var(--gold)" stroke="none"/>
+          </svg>
+        </i></div>
+        <span class="wordmark">Dorje<span>Mala</span></span>
+      </div>
+      <div class="langs">
+        <button type="button" id="uk">UK</button>
+        <button type="button" id="en">EN</button>
+      </div>
+    </div>
 
-  <div class="actions">
-    <button class="cta" id="cta"></button>
-    <div class="hint" id="hint"></div>
-    <a class="alt" id="alt" href="app.html"></a>
-    <div class="foot">
-      <a href="https://t.me/dorjemala_bot">Telegram</a> ·
-      <a href="https://github.com/Manjushri33/DorjeMala/releases/download/latest/DorjeMala.apk">APK</a>
+    <div class="top">
+      <div class="iconwrap">
+        <div class="iconbox"><img src="icon-512.png" width="104" height="104" alt="DorjeMala"></div>
+      </div>
+      <h1><span data-t="h1a"></span> <em data-t="h1b"></em></h1>
+      <p class="lead" data-t="lead"></p>
+      <div class="chips">
+        <span data-t="chip1"></span><span data-t="chip2"></span><span data-t="chip3"></span>
+      </div>
+    </div>
+
+    <div class="phonewrap">
+      <div class="phone"><div class="glass"><div class="mock" id="mockHome"></div></div></div>
     </div>
   </div>
-</main>
+
+  <section>
+    <p class="sechead" data-t="featTitle"></p>
+    <div class="cards">
+      <article>
+        <div class="bullet"><b>◉</b></div>
+        <div><h3 data-t="f1t"></h3><p data-t="f1d"></p></div>
+      </article>
+      <article>
+        <div class="bullet"><b>◒</b></div>
+        <div><h3 data-t="f2t"></h3><p data-t="f2d"></p></div>
+      </article>
+      <article>
+        <div class="bullet"><b>☸</b></div>
+        <div><h3 data-t="f3t"></h3><p data-t="f3d"></p></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="inside">
+    <p class="sechead" data-t="insideTitle"></p>
+    <div class="gallery dm-scroll">
+      <div class="shot"><div class="mock" id="mockCount"></div></div>
+      <div class="shot"><div class="mock" id="mockRetreat"></div></div>
+      <div class="shot"><div class="mock" id="mockCal"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="sechead" data-t="stepsTitle"></p>
+    <div class="steps">
+      <div class="step"><div class="n">01</div>
+        <div><h4 data-t="s1t"></h4><p data-t="s1d"></p></div></div>
+      <div class="step"><div class="n">02</div>
+        <div><h4 data-t="s2t"></h4><p data-t="s2d"></p></div></div>
+      <div class="step"><div class="n">03</div>
+        <div><h4 data-t="s3t"></h4><p data-t="s3d"></p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="quote">
+      <div class="halo2"></div>
+      <p data-t="quote"></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <span>DorjeMala · 2026</span>
+      <span data-t="req"></span>
+    </div>
+  </footer>
+
+  <div class="ctabar">
+    <a class="cta" id="cta"
+       href="https://github.com/Manjushri33/DorjeMala/releases/download/latest/DorjeMala.apk"></a>
+  </div>
+</div>
 
 <script>
 (function () {
-  // Inside Telegram the landing page is pointless — the mini app opens the
-  // application itself. Telegram passes its parameters in the URL hash.
+  // Inside Telegram the landing is pointless — the mini app must open the app
+  // itself. Telegram passes its parameters in the URL hash.
   if (location.hash.indexOf('tgWebApp') >= 0 || window.TelegramWebviewProxy) {
     location.replace('app.html' + location.hash);
     return;
   }
-  // Opened as an installed app: never show the landing.
-  var standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  if (standalone) { location.replace('app.html'); return; }
 
-  var T = {
+  var COPY = {
     uk: {
-      sub: 'Лічильник мантр для щоденної практики',
-      rows: [
-        ['◉', 'Рахує на дотик', 'Торкаєшся екрана — телефон відповідає вібрацією. Дивитись на нього не треба.'],
-        ['☸', 'Ретрити й календар', 'Власні цілі та дати, дні Гуру Рінпоче й дакіні, повні та нові місяці.'],
-        ['▤', 'Статистика', 'Загальний підсумок, серія днів, історія по днях і мантрах.']
-      ],
-      privacy: 'Працює без інтернету. Дані залишаються на твоєму пристрої.',
-      install: 'Встановити',
-      open: 'Відкрити',
-      openAlt: 'Відкрити без встановлення',
-      hintIos: 'На iPhone: спершу відкрий, далі <b>«Поділитися» ↑</b> → <b>«На екран Домівки»</b>',
-      hintMenu: 'Якщо кнопка не спрацювала: меню браузера <b>⋮</b> → «Встановити застосунок»',
-      hintOk: 'Встановлення без завантаження файлів, займе кілька секунд.',
-      done: 'Готово — іконка на робочому столі.'
+      h1a: 'Твій супутник у', h1b: 'мантра-практиці',
+      lead: 'Лічильник мантр, ретрити й буддійський календар — в одному застосунку.',
+      chip1: 'Без інтернету', chip2: 'Без акаунта', chip3: 'Без реклами',
+      featTitle: 'Три речі, які тримають практику',
+      f1t: 'Лічильник мантр', f1d: 'Рахуй повторення мантр і зберігай свої накопичення. Кожен дотик відгукується вібрацією — на екран дивитись не треба.',
+      f2t: 'Ретрити', f2d: 'Створюй ретрити, стеж за щоденною практикою та прогресом.',
+      f3t: 'Буддійський календар', f3d: 'Переглядай важливі буддійські дати, дні практик і свят.',
+      insideTitle: 'Всередині',
+      stepsTitle: 'Встановлення — три кроки',
+      s1t: 'Завантаж файл', s1d: 'Натисни «Завантажити APK». Браузер попередить, що файл може зашкодити — так він каже про все, що не з Play Маркету. Обери «Все одно завантажити».',
+      s2t: 'Дозволь встановлення', s2d: 'Відкрий завантажений файл. Android попросить дозволити встановлення з цього джерела, а потім кілька десятків секунд перевірятиме застосунок — це нормально.',
+      s3t: 'Обери мову й додай мантру', s3d: 'При першому запуску застосунок спитає мову й запропонує короткий тур — він створить першу мантру за тебе. Реєстрація не потрібна.',
+      quote: 'Працює без інтернету. Дані залишаються на твоєму пристрої.',
+      cta: 'Завантажити APK',
+      req: 'Android 7.0 і новіший · 2,3 МБ',
+      mock: { practice: 'Практика', cont: 'Ваджрасаттва', contn: '34 500 · продовжити',
+        m1: 'Мані', m1t: 'ОМ МАНІ ПАДМЕ ХУМ', m1n: '12 400 / 100 000',
+        m2: 'Тара', m2t: 'ОМ ТАРЕ ТУТТАРЕ', m2n: '3 208 / 21 000',
+        tabs: ['Практика','Ретрити','Життя','Календар'],
+        cnt: 'мала 47 · сьогодні 324', goal: 'до цілі 65 500',
+        rt: 'Ретрит Ваджрасаттви', rd: '1 — 21 серпня', ri1: 'Стослівна', ri2: 'Мані',
+        cal: 'Серпень 2026', calnote: 'Сьогодні: День Дакіні · практика примножується',
+        wk: ['П','В','С','Ч','П','С','Н'] }
     },
     en: {
-      sub: 'A mantra counter for daily practice',
-      rows: [
-        ['◉', 'Counts by touch', 'Tap the screen and the phone answers with a short vibration. No need to look at it.'],
-        ['☸', 'Retreats and calendar', 'Your own goals and dates, Guru Rinpoche and Dakini days, full and new moons.'],
-        ['▤', 'Statistics', 'Lifetime total, day streak, history by day and by mantra.']
-      ],
-      privacy: 'Works offline. Everything stays on your device.',
-      install: 'Install',
-      open: 'Open',
-      openAlt: 'Open without installing',
-      hintIos: 'On iPhone: open it first, then <b>Share ↑</b> → <b>“Add to Home Screen”</b>',
-      hintMenu: 'If the button does nothing: browser menu <b>⋮</b> → “Install app”',
-      hintOk: 'Nothing is downloaded — it takes a couple of seconds.',
-      done: 'Done — the icon is on your home screen.'
+      h1a: 'Your companion in', h1b: 'mantra practice',
+      lead: 'A mantra counter, retreats and the Buddhist calendar — in one app.',
+      chip1: 'Works offline', chip2: 'No account', chip3: 'No ads',
+      featTitle: 'Three things that hold a practice',
+      f1t: 'Mantra counter', f1d: 'Count mantra repetitions and keep your accumulations. Every tap answers with a short vibration — no need to look at the screen.',
+      f2t: 'Retreats', f2d: 'Create retreats and follow your daily practice and progress.',
+      f3t: 'Buddhist calendar', f3d: 'See important Buddhist dates, practice days and holidays.',
+      insideTitle: 'Inside',
+      stepsTitle: 'Install in three steps',
+      s1t: 'Download the file', s1d: 'Tap “Download APK”. The browser will warn that the file may harm your device — it says that about anything not from Play. Choose “Download anyway”.',
+      s2t: 'Allow the install', s2d: 'Open the downloaded file. Android will ask permission to install from this source, then spend half a minute scanning the app — that is normal.',
+      s3t: 'Pick a language, add a mantra', s3d: 'On first launch the app asks for a language and offers a short tour, which creates your first mantra for you. No sign-up needed.',
+      quote: 'Works offline. Your data stays on your device.',
+      cta: 'Download APK',
+      req: 'Android 7.0 and newer · 2.3 MB',
+      mock: { practice: 'Practice', cont: 'Vajrasattva', contn: '34,500 · continue',
+        m1: 'Mani', m1t: 'OM MANI PADME HUM', m1n: '12,400 / 100,000',
+        m2: 'Tara', m2t: 'OM TARE TUTTARE', m2n: '3,208 / 21,000',
+        tabs: ['Practice','Retreats','Life','Calendar'],
+        cnt: 'mala 47 · today 324', goal: '65,500 to the goal',
+        rt: 'Vajrasattva retreat', rd: '1 — 21 August', ri1: 'Hundred-syllable', ri2: 'Mani',
+        cal: 'August 2026', calnote: 'Today: Dakini Day · practice is multiplied',
+        wk: ['M','T','W','T','F','S','S'] }
     }
   };
+
+  // ── the drawn screens ──
+  function screenHome(m) {
+    return '<div class="glow"></div>' +
+      '<div class="hd"><div class="ttl">' + m.practice + '</div>' +
+      '<div class="dot"></div><div class="dot"></div><div class="dot g"></div></div>' +
+      '<div class="big"><div class="bg"></div><div class="sh"></div><div class="cap">' +
+        '<div style="font-size:10px;font-weight:800">' + m.cont + '</div>' +
+        '<div style="font-size:7.5px;color:#e0c48a;margin-top:2px">' + m.contn + '</div>' +
+      '</div></div>' +
+      card(m.m1, m.m1t, m.m1n, 12) + card(m.m2, m.m2t, m.m2n, 15) +
+      tabs(m.tabs, 0);
+  }
+  function card(nm, tx, num, pct) {
+    return '<div class="card"><div class="nm">' + nm + '</div>' +
+      '<div class="tx">' + tx + '</div><div class="num">' + num + '</div>' +
+      '<div class="prog"><i style="width:' + pct + '%"></i></div></div>';
+  }
+  function tabs(names, active) {
+    return '<div class="tabs">' + names.map(function (n, i) {
+      return '<div class="' + (i === active ? 'on' : '') + '"><em></em>' + n + '</div>';
+    }).join('') + '</div>';
+  }
+  // A mala drawn as 24 beads on a circle — the same figure as the app icon.
+  function mala(filled) {
+    var s = '', i, a, x, y;
+    for (i = 0; i < 24; i++) {
+      a = (i / 24) * Math.PI * 2 - Math.PI / 2;
+      x = 51 + Math.cos(a) * 38; y = 51 + Math.sin(a) * 38;
+      s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.4" fill="' +
+        (i < filled ? '#e0c48a' : 'rgba(232,230,240,.16)') + '"/>';
+    }
+    return '<svg class="ring" width="102" height="102" viewBox="0 0 102 102">' + s +
+      '<circle cx="51" cy="51" r="4.6" fill="#c9a86a"/></svg>';
+  }
+  function screenCount(m) {
+    return '<div class="glow"></div>' +
+      '<div class="hd"><div class="dot"></div><div class="ttl"></div><div class="dot"></div></div>' +
+      '<div class="count"><div class="n">1 083</div><div class="s">' + m.cnt + '</div></div>' +
+      mala(11) +
+      '<div class="capt"><div style="font-size:7.5px;color:rgba(232,230,240,.5);margin-bottom:4px">' +
+        m.goal + '</div><div class="prog"><i style="width:34%"></i></div></div>';
+  }
+  function screenRetreat(m) {
+    return '<div class="glow"></div>' +
+      '<div class="hd"><div class="dot"></div><div class="ttl" style="text-align:center">' +
+        m.rt + '</div><div class="dot"></div></div>' +
+      '<div style="text-align:center;font-size:7.5px;color:rgba(232,230,240,.5);margin-bottom:12px">' +
+        m.rd + '</div>' +
+      mala(16) +
+      '<div style="text-align:center;margin-top:10px;font-size:9px;color:#e0c48a;font-weight:700">' +
+        '64%</div>' +
+      '<div style="margin-top:14px">' +
+        card(m.ri1, '', '13 400 / 21 000', 64) + card(m.ri2, '', '8 900 / 21 000', 42) +
+      '</div>';
+  }
+  function screenCal(m) {
+    var marked = { 4: 1, 10: 1, 15: 1, 25: 1, 29: 1, 30: 1 }, cells = '', d;
+    for (d = 1; d <= 3; d++) cells += '<b class="o">' + (28 + d) + '</b>';
+    for (d = 1; d <= 31; d++) {
+      cells += '<b class="' + (d === 10 ? 'now' : (marked[d] ? 'm' : '')) + '">' + d + '</b>';
+    }
+    return '<div class="glow"></div>' +
+      '<div class="hd"><div class="dot"></div><div class="ttl" style="text-align:center">' +
+        m.cal + '</div><div class="dot"></div></div>' +
+      '<div class="wk">' + m.wk.map(function (w) { return '<span>' + w + '</span>'; }).join('') + '</div>' +
+      '<div class="cal">' + cells + '</div>' +
+      '<div class="note">' + m.calnote + '</div>';
+  }
 
   var saved = null;
   try { saved = localStorage.getItem('dm_site_lang'); } catch (e) {}
   var lang = saved || (/^(uk|ru)/i.test(navigator.language || '') ? 'uk' : 'en');
 
-  var ua = navigator.userAgent || '';
-  var isIos = /iphone|ipad|ipod/i.test(ua) ||
-              (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-
-  var deferred = null, installed = false;
-  var cta = document.getElementById('cta'), hint = document.getElementById('hint');
-
   function draw() {
-    var t = T[lang];
+    var t = COPY[lang], m = t.mock;
     document.documentElement.lang = lang;
-    document.getElementById('lang').textContent = lang === 'uk' ? 'EN' : 'УК';
-    document.getElementById('sub').textContent = t.sub;
-    document.getElementById('privacy').textContent = t.privacy;
-    document.getElementById('alt').textContent = t.openAlt;
-    document.getElementById('rows').innerHTML = t.rows.map(function (r) {
-      return '<li><div class="ic">' + r[0] + '</div><div><div class="t">' +
-             r[1] + '</div><div class="d">' + r[2] + '</div></div></li>';
-    }).join('');
-
-    if (installed)      { cta.textContent = t.open;    hint.innerHTML = t.done; }
-    else if (deferred)  { cta.textContent = t.install; hint.innerHTML = t.hintOk; }
-    else if (isIos)     { cta.textContent = t.open;    hint.innerHTML = t.hintIos; }
-    else                { cta.textContent = t.install; hint.innerHTML = t.hintMenu; }
+    document.querySelectorAll('[data-t]').forEach(function (el) {
+      el.textContent = t[el.getAttribute('data-t')];
+    });
+    document.getElementById('cta').textContent = t.cta;
+    document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
+    document.getElementById('en').className = lang === 'en' ? 'on' : '';
+    document.getElementById('mockHome').innerHTML = screenHome(m);
+    document.getElementById('mockCount').innerHTML = screenCount(m);
+    document.getElementById('mockRetreat').innerHTML = screenRetreat(m);
+    document.getElementById('mockCal').innerHTML = screenCal(m);
+    fitMocks();
   }
 
-  document.getElementById('lang').onclick = function () {
-    lang = lang === 'uk' ? 'en' : 'uk';
-    try { localStorage.setItem('dm_site_lang', lang); } catch (e) {}
-    draw();
-  };
-
-  // Chrome fires this instead of showing its own bar; we hold it and put the
-  // choice on our own button.
-  window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault();
-    deferred = e;
-    draw();
-  });
-
-  window.addEventListener('appinstalled', function () {
-    installed = true; deferred = null; draw();
-  });
-
-  cta.onclick = function () {
-    if (deferred) {
-      deferred.prompt();
-      deferred.userChoice.then(function () { deferred = null; draw(); });
-    } else {
-      location.href = 'app.html';
-    }
-  };
-
-  // Installability requires a service worker in control of the page.
-  if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  // The mock-ups are authored at 186px; the hero slot is wider, so scale to fill.
+  function fitMocks() {
+    document.querySelectorAll('.mock').forEach(function (el) {
+      var box = el.parentElement.getBoundingClientRect();
+      var k = box.width / 186;
+      el.style.transform = k === 1 ? '' : 'scale(' + k + ')';
+      el.style.height = (box.height / k) + 'px';
+    });
   }
+
+  function pick(l) {
+    return function () {
+      lang = l;
+      try { localStorage.setItem('dm_site_lang', l); } catch (e) {}
+      draw();
+    };
+  }
+  document.getElementById('uk').onclick = pick('uk');
+  document.getElementById('en').onclick = pick('en');
+  window.addEventListener('resize', fitMocks);
 
   draw();
 })();
