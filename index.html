@@ -31,7 +31,7 @@
 
   body{color:#efe9f2;font-family:Manrope,system-ui,sans-serif;min-height:100vh;
     display:flex;justify-content:center}
-  .page{width:100%;max-width:480px;position:relative;background:#0a080d;padding-bottom:158px}
+  .page{width:100%;max-width:480px;position:relative;background:#0a080d;padding-bottom:132px}
   .hero{position:relative;overflow:hidden;
     background:radial-gradient(120% 80% at 50% -10%,#291d35 0%,#16111f 45%,#0a080d 100%)}
   .halo{position:absolute;top:-220px;left:50%;width:460px;height:460px;border-radius:50%;
@@ -135,7 +135,7 @@
   /* Desktop only: the app is for a phone, so hand the page over to one.
      Hidden below 900px, where the visitor is already holding the phone. */
   .qr{display:none}
-  @media (min-width:900px){
+  @media (min-width:1140px){
     .qr{display:flex;position:fixed;right:28px;bottom:28px;z-index:25;gap:14px;
       align-items:center;padding:14px;border-radius:18px;
       background:linear-gradient(180deg,#16111e,#100c16);
@@ -309,7 +309,6 @@
       f3t: 'Буддійський календар', f3d: 'Переглядай важливі буддійські дати, дні практик і свят.',
       insideTitle: 'Всередині',
       stepsTitle: 'Встановлення — три кроки',
-      stepsTitle: 'Встановлення — три кроки',
       s1t: 'Натисни «Встановити»', s1d: 'Браузер запитає підтвердження. Нічого не завантажується, файлів шукати не треба.',
       s2t: 'Іконка на екрані', s2d: 'Застосунок відкривається як звичайний, на весь екран. Оновлення приходять самі.',
       s3t: 'Обери мову', s3d: 'При першому запуску застосунок спитає мову й запропонує тур, який створить першу мантру.',
@@ -328,7 +327,6 @@
       f3t: 'Buddhist calendar', f3d: 'See important Buddhist dates, practice days and holidays.',
       insideTitle: 'Inside',
       stepsTitle: 'Install in three steps',
-      stepsTitle: 'Installing — three steps',
       s1t: 'Tap “Install”', s1d: 'The browser asks you to confirm. Nothing is downloaded, no file to hunt for.',
       s2t: 'An icon appears', s2d: 'It opens like any other app, full screen. Updates arrive on their own.',
       s3t: 'Pick a language', s3d: 'On first launch the app asks for a language and offers a tour that creates your first mantra.',
@@ -359,6 +357,34 @@
     document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
     document.getElementById('en').className = lang === 'en' ? 'on' : '';
   }
+
+  // Chrome only offers installation once a service worker controls the page,
+  // and it hands the prompt to us instead of showing its own. Without both of
+  // these the button silently degrades to "open", which is what the whole page
+  // is trying not to be.
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  }
+
+  var installBtn = document.getElementById('install');
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    draw();
+  });
+
+  window.addEventListener('appinstalled', function () {
+    deferred = null;
+    draw();
+  });
+
+  installBtn.onclick = function (e) {
+    if (!deferred) return;          // nothing to prompt — follow the href
+    e.preventDefault();
+    deferred.prompt();
+    deferred.userChoice.then(function () { deferred = null; draw(); });
+  };
 
   function pick(l) {
     return function () {
