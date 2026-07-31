@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'index.html'
+      - 'app.html'
       - 'android/**'
       - '.github/workflows/android.yml'
 
@@ -33,11 +33,17 @@ jobs:
       - name: Copy the web app into the APK assets
         run: |
           mkdir -p android/app/src/main/assets
-          cp index.html android/app/src/main/assets/index.html
+          # app.html is the application itself; index.html at the repository
+          # root is the landing page and has no place inside the APK.
+          cp app.html android/app/src/main/assets/index.html
           # The calendar thangkas are ordinary files the app loads by path,
           # so they must travel with the APK. imajes/ is the source folder and
           # is deliberately left out.
           if [ -d uploads ]; then cp -r uploads android/app/src/main/assets/; fi
+          # The page links these; without them the WebView logs a 404 on every
+          # start. They cost a few kilobytes.
+          cp manifest.json icon.svg icon-192.png icon-512.png apple-touch-icon.png \
+             android/app/src/main/assets/
           du -sh android/app/src/main/assets
 
       - name: Build release APK
