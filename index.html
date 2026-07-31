@@ -83,8 +83,9 @@
     background:linear-gradient(180deg,#16111e,#100c16);border:1px solid rgba(255,255,255,.055)}
   .bullet{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:rgba(217,182,120,.1);
     border:1px solid rgba(217,182,120,.24);display:grid;place-items:center}
-  /* The same three glyphs the app shows on its own welcome screen. */
-  .bullet b{font-size:17px;line-height:1;color:var(--gold);font-weight:400}
+  .b1{width:13px;height:13px;border-radius:50%;border:2px solid var(--gold)}
+  .b2{width:15px;height:8px;border-radius:8px 8px 0 0;background:var(--gold)}
+  .b3{width:14px;height:14px;border-radius:50%;border:2px dotted var(--gold)}
   article h3{margin:2px 0 7px;font-size:17.5px;font-weight:800;letter-spacing:-.02em}
   article p{margin:0;font-size:15px;line-height:1.6;color:#a9a2b4;text-wrap:pretty}
 
@@ -183,6 +184,13 @@
   .mock .cal b.o{opacity:.25}
   .mock .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:0 12px 5px;
     font-size:6.5px;color:rgba(232,230,240,.3);text-align:center}
+  .mock .sub{margin:14px 12px 6px;font-size:6.5px;letter-spacing:1.6px;font-weight:600;
+    color:rgba(232,230,240,.4);text-transform:uppercase}
+  .mock .bars{display:flex;align-items:flex-end;gap:3px;height:52px;margin:0 12px}
+  .mock .bars i{flex:1;border-radius:2px 2px 0 0;
+    background:linear-gradient(180deg,#e0c48a,#c9a86a)}
+  .mock .heat{display:grid;grid-template-columns:repeat(14,1fr);gap:2px;margin:0 12px}
+  .mock .heat u{aspect-ratio:1;border-radius:1.5px;display:block}
   .mock .note{margin:9px 12px 0;border-radius:9px;padding:7px 8px;
     background:rgba(201,168,106,.09);border:1px solid rgba(201,168,106,.22);
     font-size:7.5px;line-height:1.4;color:rgba(232,230,240,.8)}
@@ -244,15 +252,15 @@
     <p class="sechead" data-t="featTitle"></p>
     <div class="cards">
       <article>
-        <div class="bullet"><b>◉</b></div>
+        <div class="bullet"><div class="b1"></div></div>
         <div><h3 data-t="f1t"></h3><p data-t="f1d"></p></div>
       </article>
       <article>
-        <div class="bullet"><b>◒</b></div>
+        <div class="bullet"><div class="b2"></div></div>
         <div><h3 data-t="f2t"></h3><p data-t="f2d"></p></div>
       </article>
       <article>
-        <div class="bullet"><b>☸</b></div>
+        <div class="bullet"><div class="b3"></div></div>
         <div><h3 data-t="f3t"></h3><p data-t="f3d"></p></div>
       </article>
     </div>
@@ -264,6 +272,7 @@
       <div class="shot"><div class="mock" id="mockCount"></div></div>
       <div class="shot"><div class="mock" id="mockRetreat"></div></div>
       <div class="shot"><div class="mock" id="mockCal"></div></div>
+      <div class="shot"><div class="mock" id="mockStats"></div></div>
     </div>
   </section>
 
@@ -326,13 +335,15 @@
       cta: 'Завантажити APK',
       req: 'Android 7.0 і новіший · 2,3 МБ',
       mock: { practice: 'Практика', cont: 'Ваджрасаттва', contn: '34 500 · продовжити',
-        m1: 'Мані', m1t: 'ОМ МАНІ ПАДМЕ ХУМ', m1n: '12 400 / 100 000',
+        m1: 'Авалокітешвара', m1t: 'ОМ МАНІ ПАДМЕ ХУМ', m1n: '12 400 / 100 000',
         m2: 'Тара', m2t: 'ОМ ТАРЕ ТУТТАРЕ', m2n: '3 208 / 21 000',
         tabs: ['Практика','Ретрити','Життя','Календар'],
         cnt: 'мала 47 · сьогодні 324', goal: 'до цілі 65 500',
-        rt: 'Ретрит Ваджрасаттви', rd: '1 — 21 серпня', ri1: 'Стослівна', ri2: 'Мані',
+        rt: 'Ретрит захисників', rd: '1 — 21 серпня', ri1: 'Екаджаті', ri2: 'Рахула',
         cal: 'Серпень 2026', calnote: 'Сьогодні: День Дакіні · практика примножується',
-        wk: ['П','В','С','Ч','П','С','Н'] }
+        wk: ['П','В','С','Ч','П','С','Н'],
+        stt: 'Життя', stTotal: 'усього прочитано', stStreak: 'днів поспіль',
+        st14: 'Два тижні', st6: 'Пів року' }
     },
     en: {
       h1a: 'Your companion in', h1b: 'mantra practice',
@@ -351,13 +362,15 @@
       cta: 'Download APK',
       req: 'Android 7.0 and newer · 2.3 MB',
       mock: { practice: 'Practice', cont: 'Vajrasattva', contn: '34,500 · continue',
-        m1: 'Mani', m1t: 'OM MANI PADME HUM', m1n: '12,400 / 100,000',
+        m1: 'Avalokiteshvara', m1t: 'OM MANI PADME HUM', m1n: '12,400 / 100,000',
         m2: 'Tara', m2t: 'OM TARE TUTTARE', m2n: '3,208 / 21,000',
         tabs: ['Practice','Retreats','Life','Calendar'],
         cnt: 'mala 47 · today 324', goal: '65,500 to the goal',
-        rt: 'Vajrasattva retreat', rd: '1 — 21 August', ri1: 'Hundred-syllable', ri2: 'Mani',
+        rt: 'Protectors retreat', rd: '1 — 21 August', ri1: 'Ekajati', ri2: 'Rahula',
         cal: 'August 2026', calnote: 'Today: Dakini Day · practice is multiplied',
-        wk: ['M','T','W','T','F','S','S'] }
+        wk: ['M','T','W','T','F','S','S'],
+        stt: 'Life', stTotal: 'recited in all', stStreak: 'days in a row',
+        st14: 'Two weeks', st6: 'Six months' }
     }
   };
 
@@ -366,7 +379,13 @@
     return '<div class="glow"></div>' +
       '<div class="hd"><div class="ttl">' + m.practice + '</div>' +
       '<div class="dot"></div><div class="dot"></div><div class="dot g"></div></div>' +
-      '<div class="big"><div class="bg"></div><div class="sh"></div><div class="cap">' +
+      // The thangka is optional: if uploads/img/vajrasattva.jpg is not there yet,
+      // onerror drops the layer and the gradient underneath shows through.
+      '<div class="big"><div class="bg"></div>' +
+      '<img src="uploads/img/vajrasattva.jpg" alt="" ' +
+        'style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' +
+        'object-position:center 22%" onerror="this.remove()">' +
+      '<div class="sh"></div><div class="cap">' +
         '<div style="font-size:10px;font-weight:800">' + m.cont + '</div>' +
         '<div style="font-size:7.5px;color:#e0c48a;margin-top:2px">' + m.contn + '</div>' +
       '</div></div>' +
@@ -416,6 +435,30 @@
         card(m.ri1, '', '13 400 / 21 000', 64) + card(m.ri2, '', '8 900 / 21 000', 42) +
       '</div>';
   }
+  function screenStats(m) {
+    var bars = [38, 52, 20, 64, 71, 44, 80, 58, 33, 90, 62, 47, 76, 55], i, s = '';
+    for (i = 0; i < bars.length; i++) {
+      s += '<i style="height:' + bars[i] + '%;opacity:' + (i === 13 ? 1 : .55) + '"></i>';
+    }
+    var heat = '', k, lv;
+    for (k = 0; k < 84; k++) {
+      lv = [0, .12, .28, .45, .7, .95][(k * 7 + (k % 5) * 3) % 6];
+      heat += '<u style="background:rgba(201,168,106,' + (lv || .05) + ')"></u>';
+    }
+    return '<div class="glow"></div>' +
+      '<div class="hd"><div class="dot"></div><div class="ttl" style="text-align:center">' +
+        m.stt + '</div><div class="dot"></div></div>' +
+      '<div style="text-align:center;margin-top:6px">' +
+        '<div style="font-size:27px;font-weight:800;letter-spacing:-1px">148 320</div>' +
+        '<div style="font-size:7.5px;color:rgba(232,230,240,.5);margin-top:3px">' + m.stTotal + '</div>' +
+      '</div>' +
+      '<div style="display:flex;justify-content:center;align-items:baseline;gap:4px;margin-top:10px">' +
+        '<span style="font-size:15px;font-weight:800;color:#e0c48a">42</span>' +
+        '<span style="font-size:7.5px;color:rgba(232,230,240,.5)">' + m.stStreak + '</span>' +
+      '</div>' +
+      '<div class="sub">' + m.st14 + '</div><div class="bars">' + s + '</div>' +
+      '<div class="sub">' + m.st6 + '</div><div class="heat">' + heat + '</div>';
+  }
   function screenCal(m) {
     var marked = { 4: 1, 10: 1, 15: 1, 25: 1, 29: 1, 30: 1 }, cells = '', d;
     for (d = 1; d <= 3; d++) cells += '<b class="o">' + (28 + d) + '</b>';
@@ -447,6 +490,7 @@
     document.getElementById('mockCount').innerHTML = screenCount(m);
     document.getElementById('mockRetreat').innerHTML = screenRetreat(m);
     document.getElementById('mockCal').innerHTML = screenCal(m);
+    document.getElementById('mockStats').innerHTML = screenStats(m);
     fitMocks();
   }
 
