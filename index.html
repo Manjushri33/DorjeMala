@@ -74,7 +74,11 @@
   .phone{width:238px;padding:9px 9px 0;border-radius:34px 34px 0 0;
     background:linear-gradient(165deg,rgba(217,182,120,.36),rgba(217,182,120,.06) 50%,rgba(255,255,255,.03));
     box-shadow:0 -10px 60px rgba(0,0,0,.5)}
+  /* Real screenshots, 512×1060. The hero crops the top of the screen; the
+     gallery shows a whole screen at once. */
   .phone .glass{border-radius:27px 27px 0 0;overflow:hidden;background:#100c16;height:300px}
+  .phone .glass img{width:100%;height:auto;display:block}
+  .shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 
   section{padding:56px 22px 0}
   .sechead{margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;
@@ -163,67 +167,6 @@
   .cta:hover{box-shadow:0 16px 44px rgba(217,182,120,.38);color:#1a1208}
   .cta:active{transform:scale(.985)}
 
-  /* ─────────── screen mock-ups ───────────
-     Drawn, not photographed: the app's own palette and layout, so the page can
-     ship before real screenshots exist. Built at 186px wide and scaled to fit
-     whatever slot they sit in. */
-  .mock{width:186px;transform-origin:top left;font-family:Manrope,sans-serif;
-    background:linear-gradient(180deg,#100e18,#0b0a10);height:362px;overflow:hidden;
-    position:relative;color:#f2f0f8}
-  .mock .glow{position:absolute;left:-20%;right:-20%;top:-8%;height:46%;pointer-events:none;
-    background:radial-gradient(55% 55% at 50% 30%,rgba(201,168,106,.13),transparent 70%)}
-  .mock .hd{position:relative;display:flex;align-items:center;padding:14px 12px 10px}
-  .mock .hd .ttl{flex:1;font-size:13px;font-weight:800;letter-spacing:.1px}
-  .mock .dot{width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.06);
-    margin-left:4px}
-  .mock .dot.g{background:linear-gradient(135deg,#d8b578,#c9a86a)}
-  .mock .card{margin:0 12px 8px;border-radius:11px;padding:9px 10px;
-    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}
-  .mock .card .nm{font-size:9.5px;font-weight:700}
-  .mock .card .tx{font-size:7.5px;color:rgba(232,230,240,.5);margin-top:2px}
-  .mock .card .num{font-size:9px;color:#e0c48a;font-weight:700;margin-top:5px}
-  .mock .prog{height:3px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:5px;
-    overflow:hidden}
-  .mock .prog i{display:block;height:100%;background:linear-gradient(90deg,#d8b578,#c9a86a)}
-  .mock .big{margin:0 12px 8px;height:96px;border-radius:14px;position:relative;
-    overflow:hidden;border:1px solid rgba(201,168,106,.3)}
-  .mock .big .bg{position:absolute;inset:0;
-    background:radial-gradient(70% 70% at 50% 30%,#3a2c46,#191322 70%,#0e0b14)}
-  .mock .big .sh{position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(10,9,15,.05) 15%,rgba(10,9,15,.92))}
-  .mock .big .cap{position:absolute;left:10px;right:10px;bottom:9px}
-  .mock .tabs{position:absolute;left:0;right:0;bottom:0;display:flex;padding:8px 10px 11px;
-    gap:2px;background:linear-gradient(180deg,rgba(11,10,16,0),rgba(11,10,16,.95) 40%)}
-  .mock .tabs div{flex:1;text-align:center;font-size:6.5px;color:rgba(232,230,240,.35)}
-  .mock .tabs div.on{color:#e0c48a}
-  .mock .tabs em{display:block;width:11px;height:11px;border-radius:4px;margin:0 auto 3px;
-    background:rgba(255,255,255,.08)}
-  .mock .tabs div.on em{background:rgba(201,168,106,.3)}
-  .mock .count{text-align:center;margin-top:22px}
-  .mock .count .n{font-size:38px;font-weight:800;letter-spacing:-1.5px;line-height:1}
-  .mock .count .s{font-size:8px;color:rgba(232,230,240,.5);margin-top:5px}
-  .mock .ring{display:block;margin:14px auto 0}
-  .mock .capt{position:absolute;left:12px;right:12px;bottom:16px}
-  .mock .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:0 12px}
-  .mock .cal b{aspect-ratio:1;border-radius:5px;display:grid;place-items:center;
-    font-size:7.5px;font-weight:500;color:rgba(232,230,240,.55);
-    background:rgba(255,255,255,.028);position:relative}
-  .mock .cal b.m::after{content:"";position:absolute;bottom:2px;width:3px;height:3px;
-    border-radius:50%;background:#e0c48a}
-  .mock .cal b.now{background:linear-gradient(135deg,#d8b578,#c9a86a);color:#221a08;font-weight:800}
-  .mock .cal b.o{opacity:.25}
-  .mock .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:0 12px 5px;
-    font-size:6.5px;color:rgba(232,230,240,.3);text-align:center}
-  .mock .sub{margin:14px 12px 6px;font-size:6.5px;letter-spacing:1.6px;font-weight:600;
-    color:rgba(232,230,240,.4);text-transform:uppercase}
-  .mock .bars{display:flex;align-items:flex-end;gap:3px;height:52px;margin:0 12px}
-  .mock .bars i{flex:1;border-radius:2px 2px 0 0;
-    background:linear-gradient(180deg,#e0c48a,#c9a86a)}
-  .mock .heat{display:grid;grid-template-columns:repeat(14,1fr);gap:2px;margin:0 12px}
-  .mock .heat u{aspect-ratio:1;border-radius:1.5px;display:block}
-  .mock .note{margin:9px 12px 0;border-radius:9px;padding:7px 8px;
-    background:rgba(201,168,106,.09);border:1px solid rgba(201,168,106,.22);
-    font-size:7.5px;line-height:1.4;color:rgba(232,230,240,.8)}
 </style>
 </head>
 <body>
@@ -274,7 +217,9 @@
     </div>
 
     <div class="phonewrap">
-      <div class="phone"><div class="glass"><div class="mock" id="mockHome"></div></div></div>
+      <div class="phone"><div class="glass">
+        <img src="shots/home.jpg" width="512" height="1060" alt="">
+      </div></div>
     </div>
   </div>
 
@@ -299,10 +244,10 @@
   <section class="inside">
     <p class="sechead" data-t="insideTitle"></p>
     <div class="gallery dm-scroll">
-      <div class="shot"><div class="mock" id="mockCount"></div></div>
-      <div class="shot"><div class="mock" id="mockRetreat"></div></div>
-      <div class="shot"><div class="mock" id="mockCal"></div></div>
-      <div class="shot"><div class="mock" id="mockStats"></div></div>
+      <div class="shot"><img src="shots/counter.jpg" width="512" height="1060" alt="" loading="lazy"></div>
+      <div class="shot"><img src="shots/retreat.jpg" width="512" height="1060" alt="" loading="lazy"></div>
+      <div class="shot"><img src="shots/calendar.jpg" width="512" height="1060" alt="" loading="lazy"></div>
+      <div class="shot"><img src="shots/stats.jpg" width="512" height="1060" alt="" loading="lazy"></div>
     </div>
   </section>
 
@@ -372,16 +317,6 @@
       install: 'Встановити', open: 'Відкрити',
       ctanote: 'Без завантажень і без реєстрації.',
       qrT: 'Це для телефона', qrD: 'Наведи камеру — і відкриєш сторінку там.',
-      mock: { practice: 'Практика', cont: 'Ваджрасаттва', contn: '34 500 · продовжити',
-        m1: 'Авалокітешвара', m1t: 'ОМ МАНІ ПАДМЕ ХУМ', m1n: '12 400 / 100 000',
-        m2: 'Тара', m2t: 'ОМ ТАРЕ ТУТТАРЕ', m2n: '3 208 / 21 000',
-        tabs: ['Практика','Ретрити','Статистика','Календар'],
-        cnt: 'мала 47 · сьогодні 324', goal: 'до цілі 65 500',
-        rt: 'Ретрит захисників', rd: '1 — 21 серпня', ri1: 'Екаджаті', ri2: 'Рахула',
-        cal: 'Серпень 2026', calnote: 'Сьогодні: День Дакіні · практика примножується',
-        wk: ['П','В','С','Ч','П','С','Н'],
-        stt: 'Зелена Тара', stTotal: 'усього прочитано', stStreak: 'днів поспіль',
-        st14: 'Два тижні', st6: 'Пів року' }
     },
     en: {
       h1a: 'Your companion in', h1b: 'mantra practice',
@@ -401,117 +336,8 @@
       install: 'Install', open: 'Open',
       ctanote: 'No downloads, no sign-up.',
       qrT: 'This one is for a phone', qrD: 'Point your camera to open the page there.',
-      mock: { practice: 'Practice', cont: 'Vajrasattva', contn: '34,500 · continue',
-        m1: 'Avalokiteshvara', m1t: 'OM MANI PADME HUM', m1n: '12,400 / 100,000',
-        m2: 'Tara', m2t: 'OM TARE TUTTARE', m2n: '3,208 / 21,000',
-        tabs: ['Practice','Retreats','Statistics','Calendar'],
-        cnt: 'mala 47 · today 324', goal: '65,500 to the goal',
-        rt: 'Protectors retreat', rd: '1 — 21 August', ri1: 'Ekajati', ri2: 'Rahula',
-        cal: 'August 2026', calnote: 'Today: Dakini Day · practice is multiplied',
-        wk: ['M','T','W','T','F','S','S'],
-        stt: 'Green Tara', stTotal: 'recited in all', stStreak: 'days in a row',
-        st14: 'Two weeks', st6: 'Six months' }
     }
   };
-
-  // ── the drawn screens ──
-  function screenHome(m) {
-    return '<div class="glow"></div>' +
-      '<div class="hd"><div class="ttl">' + m.practice + '</div>' +
-      '<div class="dot"></div><div class="dot"></div><div class="dot g"></div></div>' +
-      // The thangka is optional: if uploads/img/vajrasattva.jpg is not there yet,
-      // onerror drops the layer and the gradient underneath shows through.
-      '<div class="big"><div class="bg"></div>' +
-      '<img src="uploads/img/vajrasattva.jpg" alt="" ' +
-        'style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;' +
-        'object-position:center 22%" onerror="this.remove()">' +
-      '<div class="sh"></div><div class="cap">' +
-        '<div style="font-size:10px;font-weight:800">' + m.cont + '</div>' +
-        '<div style="font-size:7.5px;color:#e0c48a;margin-top:2px">' + m.contn + '</div>' +
-      '</div></div>' +
-      card(m.m1, m.m1t, m.m1n, 12) + card(m.m2, m.m2t, m.m2n, 15) +
-      tabs(m.tabs, 0);
-  }
-  function card(nm, tx, num, pct) {
-    return '<div class="card"><div class="nm">' + nm + '</div>' +
-      '<div class="tx">' + tx + '</div><div class="num">' + num + '</div>' +
-      '<div class="prog"><i style="width:' + pct + '%"></i></div></div>';
-  }
-  function tabs(names, active) {
-    return '<div class="tabs">' + names.map(function (n, i) {
-      return '<div class="' + (i === active ? 'on' : '') + '"><em></em>' + n + '</div>';
-    }).join('') + '</div>';
-  }
-  // A mala drawn as 24 beads on a circle — the same figure as the app icon.
-  function mala(filled) {
-    var s = '', i, a, x, y;
-    for (i = 0; i < 24; i++) {
-      a = (i / 24) * Math.PI * 2 - Math.PI / 2;
-      x = 51 + Math.cos(a) * 38; y = 51 + Math.sin(a) * 38;
-      s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.4" fill="' +
-        (i < filled ? '#e0c48a' : 'rgba(232,230,240,.16)') + '"/>';
-    }
-    return '<svg class="ring" width="102" height="102" viewBox="0 0 102 102">' + s +
-      '<circle cx="51" cy="51" r="4.6" fill="#c9a86a"/></svg>';
-  }
-  function screenCount(m) {
-    return '<div class="glow"></div>' +
-      '<div class="hd"><div class="dot"></div><div class="ttl"></div><div class="dot"></div></div>' +
-      '<div class="count"><div class="n">1 083</div><div class="s">' + m.cnt + '</div></div>' +
-      mala(11) +
-      '<div class="capt"><div style="font-size:7.5px;color:rgba(232,230,240,.5);margin-bottom:4px">' +
-        m.goal + '</div><div class="prog"><i style="width:34%"></i></div></div>';
-  }
-  function screenRetreat(m) {
-    return '<div class="glow"></div>' +
-      '<div class="hd"><div class="dot"></div><div class="ttl" style="text-align:center">' +
-        m.rt + '</div><div class="dot"></div></div>' +
-      '<div style="text-align:center;font-size:7.5px;color:rgba(232,230,240,.5);margin-bottom:12px">' +
-        m.rd + '</div>' +
-      mala(16) +
-      '<div style="text-align:center;margin-top:10px;font-size:9px;color:#e0c48a;font-weight:700">' +
-        '64%</div>' +
-      '<div style="margin-top:14px">' +
-        card(m.ri1, '', '13 400 / 21 000', 64) + card(m.ri2, '', '8 900 / 21 000', 42) +
-      '</div>';
-  }
-  function screenStats(m) {
-    var bars = [38, 52, 20, 64, 71, 44, 80, 58, 33, 90, 62, 47, 76, 55], i, s = '';
-    for (i = 0; i < bars.length; i++) {
-      s += '<i style="height:' + bars[i] + '%;opacity:' + (i === 13 ? 1 : .55) + '"></i>';
-    }
-    var heat = '', k, lv;
-    for (k = 0; k < 84; k++) {
-      lv = [0, .12, .28, .45, .7, .95][(k * 7 + (k % 5) * 3) % 6];
-      heat += '<u style="background:rgba(201,168,106,' + (lv || .05) + ')"></u>';
-    }
-    return '<div class="glow"></div>' +
-      '<div class="hd"><div class="dot"></div><div class="ttl" style="text-align:center">' +
-        m.stt + '</div><div class="dot"></div></div>' +
-      '<div style="text-align:center;margin-top:6px">' +
-        '<div style="font-size:27px;font-weight:800;letter-spacing:-1px">148 320</div>' +
-        '<div style="font-size:7.5px;color:rgba(232,230,240,.5);margin-top:3px">' + m.stTotal + '</div>' +
-      '</div>' +
-      '<div style="display:flex;justify-content:center;align-items:baseline;gap:4px;margin-top:10px">' +
-        '<span style="font-size:15px;font-weight:800;color:#e0c48a">42</span>' +
-        '<span style="font-size:7.5px;color:rgba(232,230,240,.5)">' + m.stStreak + '</span>' +
-      '</div>' +
-      '<div class="sub">' + m.st14 + '</div><div class="bars">' + s + '</div>' +
-      '<div class="sub">' + m.st6 + '</div><div class="heat">' + heat + '</div>';
-  }
-  function screenCal(m) {
-    var marked = { 4: 1, 10: 1, 15: 1, 25: 1, 29: 1, 30: 1 }, cells = '', d;
-    for (d = 1; d <= 3; d++) cells += '<b class="o">' + (28 + d) + '</b>';
-    for (d = 1; d <= 31; d++) {
-      cells += '<b class="' + (d === 10 ? 'now' : (marked[d] ? 'm' : '')) + '">' + d + '</b>';
-    }
-    return '<div class="glow"></div>' +
-      '<div class="hd"><div class="dot"></div><div class="ttl" style="text-align:center">' +
-        m.cal + '</div><div class="dot"></div></div>' +
-      '<div class="wk">' + m.wk.map(function (w) { return '<span>' + w + '</span>'; }).join('') + '</div>' +
-      '<div class="cal">' + cells + '</div>' +
-      '<div class="note">' + m.calnote + '</div>';
-  }
 
   var deferred = null;
   var saved = null;
@@ -519,7 +345,7 @@
   var lang = saved || (/^(uk|ru)/i.test(navigator.language || '') ? 'uk' : 'en');
 
   function draw() {
-    var t = COPY[lang], m = t.mock;
+    var t = COPY[lang];
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-t]').forEach(function (el) {
       el.textContent = t[el.getAttribute('data-t')];
@@ -532,46 +358,6 @@
     document.getElementById('ctanote').textContent = canInstall ? t.ctanote : '';
     document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
     document.getElementById('en').className = lang === 'en' ? 'on' : '';
-    document.getElementById('mockHome').innerHTML = screenHome(m);
-    document.getElementById('mockCount').innerHTML = screenCount(m);
-    document.getElementById('mockRetreat').innerHTML = screenRetreat(m);
-    document.getElementById('mockCal').innerHTML = screenCal(m);
-    document.getElementById('mockStats').innerHTML = screenStats(m);
-    fitMocks();
-  }
-
-  // The mock-ups are authored at 186px; the hero slot is wider, so scale to fill.
-  function fitMocks() {
-    document.querySelectorAll('.mock').forEach(function (el) {
-      var box = el.parentElement.getBoundingClientRect();
-      var k = box.width / 186;
-      el.style.transform = k === 1 ? '' : 'scale(' + k + ')';
-      el.style.height = (box.height / k) + 'px';
-    });
-  }
-
-  var installBtn = document.getElementById('install');
-
-  window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault();
-    deferred = e;
-    draw();
-  });
-
-  window.addEventListener('appinstalled', function () {
-    deferred = null;
-    draw();
-  });
-
-  installBtn.onclick = function (e) {
-    if (!deferred) return;              // no prompt to show — follow the href
-    e.preventDefault();
-    deferred.prompt();
-    deferred.userChoice.then(function () { deferred = null; draw(); });
-  };
-
-  if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    navigator.serviceWorker.register('./sw.js').catch(function () {});
   }
 
   function pick(l) {
@@ -583,7 +369,6 @@
   }
   document.getElementById('uk').onclick = pick('uk');
   document.getElementById('en').onclick = pick('en');
-  window.addEventListener('resize', fitMocks);
 
   draw();
 })();
