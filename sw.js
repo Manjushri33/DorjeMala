@@ -2,8 +2,11 @@
 // 1) offline: network-first with a cache fallback
 // 2) push notifications from the bot worker
 
-const CACHE = "dorjemala-v2";
-const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg"];
+const CACHE = "dorjemala-v3";
+const ASSETS = [
+  "./", "./index.html", "./app.html", "./manifest.json",
+  "./icon.svg", "./icon-192.png", "./icon-512.png"
+];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {}));
@@ -32,7 +35,7 @@ self.addEventListener("fetch", e => {
         }
         return r;
       })
-      .catch(() => caches.match(e.request).then(r => r || caches.match("./index.html")))
+      .catch(() => caches.match(e.request).then(r => r || caches.match("./app.html")))
   );
 });
 
@@ -60,7 +63,7 @@ self.addEventListener("notificationclick", e => {
       for (const c of list) {
         if (c.url.indexOf(self.registration.scope) === 0 && "focus" in c) return c.focus();
       }
-      return self.clients.openWindow("./index.html");
+      return self.clients.openWindow("./app.html");
     })
   );
 });
