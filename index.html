@@ -84,7 +84,10 @@
     background:linear-gradient(180deg,#16111e,#100c16);border:1px solid rgba(255,255,255,.055)}
   .bullet{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:rgba(217,182,120,.1);
     border:1px solid rgba(217,182,120,.24);display:grid;place-items:center}
-  .b1{width:13px;height:13px;border-radius:50%;border:2px solid var(--gold)}
+  /* ◉ — a ring with a filled centre, the glyph the app itself uses. */
+  .b1{width:13px;height:13px;border-radius:50%;border:2px solid var(--gold);
+    display:grid;place-items:center}
+  .b1::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold)}
   .b2{width:15px;height:8px;border-radius:8px 8px 0 0;background:var(--gold)}
   .b3{width:14px;height:14px;border-radius:50%;border:2px dotted var(--gold)}
   article h3{margin:2px 0 7px;font-size:17.5px;font-weight:800;letter-spacing:-.02em}
