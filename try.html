@@ -88,7 +88,7 @@
   section{padding:64px 26px 0}
   .sechead{margin:0 0 4px;font:italic 400 27px/1.25 'Cormorant Garamond',serif;
     color:var(--parchment)}
-  .sechead+.label{display:block;margin-bottom:26px}
+  .sechead{margin-bottom:24px}
 
   /* Features: on the ground, divided by brass hairlines. Not cards. */
   .feat{display:flex;gap:20px;align-items:baseline;padding:22px 0;
@@ -102,7 +102,7 @@
 
   /* Gallery: the same arch, small, four times. */
   .inside{padding:64px 0 0}
-  .inside .sechead,.inside .label{margin-left:26px;margin-right:26px}
+  .inside .sechead{margin-left:26px;margin-right:26px}
   .gallery{display:flex;gap:16px;overflow-x:auto;padding:0 26px 4px;
     scroll-snap-type:x mandatory;scrollbar-width:none}
   .gallery::-webkit-scrollbar{display:none}
@@ -205,14 +205,13 @@
     </div>
 
     <figure class="niche">
-      <div class="frame"><img src="shots/counter.jpg" width="512" height="1060" alt=""></div>
+      <div class="frame"><img src="uploads/img/vajrasattva.jpg" width="736" height="1104" alt=""></div>
       <figcaption class="label" data-t="capCounter"></figcaption>
     </figure>
   </div>
 
   <section>
     <h2 class="sechead" data-t="featTitle"></h2>
-    <span class="label" data-t="featKicker"></span>
     <div class="feat"><div class="g">◉</div>
       <div><h3 data-t="f1t"></h3><p data-t="f1d"></p></div></div>
     <div class="feat"><div class="g">◒</div>
@@ -223,7 +222,6 @@
 
   <section class="inside">
     <h2 class="sechead" data-t="insideTitle"></h2>
-    <span class="label" data-t="insideKicker"></span>
     <div class="gallery" id="gallery">
       <figure class="shot"><div class="frame">
         <img src="shots/home.jpg" width="512" height="1060" loading="lazy" alt=""></div>
@@ -243,7 +241,6 @@
 
   <section>
     <h2 class="sechead" data-t="stepsTitle"></h2>
-    <span class="label" data-t="stepsKicker"></span>
     <div class="step"><div class="n">I</div>
       <div><h4 data-t="s1t"></h4><p data-t="s1d"></p></div></div>
     <div class="step"><div class="n">II</div>
@@ -274,14 +271,14 @@
       h1a: 'Твій супутник у', h1b: 'мантра-практиці',
       lead: 'Лічильник мантр, ретрити й буддійський календар — в одному застосунку.',
       chip1: 'Без інтернету', chip2: 'Без акаунта', chip3: 'Без реклами',
-      capCounter: 'Екран лічильника',
-      featTitle: 'Три речі, які тримають практику', featKicker: 'Що всередині',
+      capCounter: 'Ваджрасаттва',
+      featTitle: 'Три речі, які тримають практику',
       f1t: 'Лічильник мантр', f1d: 'Рахуй повторення мантр і зберігай свої накопичення.',
       f2t: 'Ретрити', f2d: 'Створюй ретрити, стеж за щоденною практикою та прогресом.',
       f3t: 'Буддійський календар', f3d: 'Переглядай важливі буддійські дати, дні практик і свят.',
-      insideTitle: 'Всередині', insideKicker: 'Екрани застосунку',
+      insideTitle: 'Всередині',
       capHome: 'Практика', capRetreat: 'Ретрит', capStats: 'Статистика', capCalendar: 'Календар',
-      stepsTitle: 'Встановлення — три кроки', stepsKicker: 'Як почати',
+      stepsTitle: 'Встановлення — три кроки',
       s1t: 'Натисни «Встановити»', s1d: 'Браузер запитає підтвердження. Нічого не завантажується, файлів шукати не треба.',
       s2t: 'Іконка на екрані', s2d: 'Застосунок відкривається як звичайний, на весь екран. Оновлення приходять самі.',
       s3t: 'Обери мову', s3d: 'При першому запуску застосунок спитає мову й запропонує тур, який створить першу мантру.',
@@ -293,14 +290,14 @@
       h1a: 'Your companion in', h1b: 'mantra practice',
       lead: 'A mantra counter, retreats and the Buddhist calendar — in one app.',
       chip1: 'Works offline', chip2: 'No account', chip3: 'No ads',
-      capCounter: 'The counter',
-      featTitle: 'Three things that hold a practice', featKicker: 'What is inside',
+      capCounter: 'Vajrasattva',
+      featTitle: 'Three things that hold a practice',
       f1t: 'Mantra counter', f1d: 'Count mantra repetitions and keep your accumulations.',
       f2t: 'Retreats', f2d: 'Create retreats and follow your daily practice and progress.',
       f3t: 'Buddhist calendar', f3d: 'See important Buddhist dates, practice days and holidays.',
-      insideTitle: 'Inside', insideKicker: 'Screens of the app',
+      insideTitle: 'Inside',
       capHome: 'Practice', capRetreat: 'Retreat', capStats: 'Statistics', capCalendar: 'Calendar',
-      stepsTitle: 'Installing — three steps', stepsKicker: 'How to begin',
+      stepsTitle: 'Installing — three steps',
       s1t: 'Tap “Install”', s1d: 'The browser asks you to confirm. Nothing is downloaded, no file to hunt for.',
       s2t: 'An icon appears', s2d: 'It opens like any other app, full screen. Updates arrive on their own.',
       s3t: 'Pick a language', s3d: 'On first launch the app asks for a language and offers a tour that creates your first mantra.',
