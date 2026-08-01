@@ -62,7 +62,7 @@
   h1 em{display:block;font-style:italic;color:var(--brass)}
   /* Two even lines. A narrower measure sent the em dash to a third line on
      its own, which is the ugliest break a sentence can make. */
-  .lead{margin:20px auto 0;max-width:min(36ch,100%);font-size:16px;line-height:1.72;
+  .lead{margin:20px auto 0;max-width:min(34ch,100%);font-size:16px;line-height:1.72;
     color:var(--ink);text-wrap:balance;hanging-punctuation:none}
   .chips{margin-top:26px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
   .chips span{position:relative}
@@ -72,28 +72,28 @@
   /* ── The arch ────────────────────────────────────────────────────────────
      A thangka belongs in a niche, not behind text. This is the page's one
      large gesture: the counter screen, whole, framed, lit from the top. */
-  .niche{margin:40px auto 0;width:268px;position:relative}
-  .niche .frame{border:1px solid var(--rule);border-radius:134px 134px 4px 4px;
+  .niche{margin:40px auto 0;width:100%;position:relative;cursor:pointer;
+    user-select:none;-webkit-user-select:none}
+  .niche .frame{border:1px solid var(--rule);border-radius:999px 999px 4px 4px;
     padding:7px;background:linear-gradient(180deg,#33291f,#241d18)}
-  .niche img{display:block;width:100%;height:auto;border-radius:128px 128px 0 0;
+  .niche img{display:block;width:100%;height:auto;border-radius:999px 999px 0 0;
     filter:sepia(.1) saturate(.96)}
   /* Tapping the niche counts, exactly as it does in the app. This is the one
      place a visitor can feel the product before installing it. */
-  .niche .frame{cursor:pointer;user-select:none;-webkit-user-select:none}
   .tally{background:#0f0c0a;border-radius:0 0 2px 2px;padding:14px 14px 16px;
     text-align:center}
-  .tally .n{font:400 40px/1 'Cormorant Garamond',serif;letter-spacing:.02em;
+  .tally .n{font:400 52px/1 'Cormorant Garamond',serif;letter-spacing:.02em;
     color:var(--parchment);font-variant-numeric:tabular-nums}
   .tally .sub{margin-top:7px;font:500 9.5px/1 'Cormorant Garamond',serif;
     letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
-  .mala{display:flex;justify-content:center;gap:3px;margin-top:11px;flex-wrap:wrap}
-  .mala i{width:4px;height:4px;border-radius:50%;background:rgba(232,223,212,.16)}
+  .mala{display:flex;justify-content:center;gap:4px;margin-top:11px;flex-wrap:wrap}
+  .mala i{width:5px;height:5px;border-radius:50%;background:rgba(232,223,212,.16)}
   .mala i.on{background:var(--brass)}
   .niche .hint{margin-top:14px;text-align:center;transition:opacity .8s ease}
   /* Vignette, so the image sits in the wood instead of on top of it. */
   .niche .frame::after{content:"";position:absolute;inset:7px;pointer-events:none;
-    border-radius:128px 128px 2px 2px;
-    box-shadow:inset 0 0 46px 10px rgba(20,16,13,.55)}
+    border-radius:999px 999px 2px 2px;
+    box-shadow:inset 0 0 46px 10px rgba(20,16,13,.5)}
   .niche figcaption{margin-top:16px;text-align:center}
 
   /* ── Sections ── */
@@ -139,11 +139,16 @@
   .step h4{margin:0 0 6px;font:500 21px/1.2 'Cormorant Garamond',serif}
   .step p{margin:0;font-size:15.5px;line-height:1.6;color:var(--ink);text-wrap:pretty}
 
-  /* A colophon, not a banner: the page ends quietly on the same ground. */
-  .leaf{margin:70px 26px 0;padding:34px 0 0;text-align:center;
-    border-top:1px solid var(--rule)}
-  .leaf p{margin:0;font:italic 400 21px/1.5 'Cormorant Garamond',serif;
+  /* A colophon: the printer's device, then the closing line. The mark is the
+     app's own, set small and dim — the way a book signs off. */
+  .leaf{margin:64px 26px 0;text-align:center}
+  .leaf img{width:30px;height:30px;border-radius:8px;opacity:.55;display:inline-block}
+  .leaf p{margin:20px 0 0;font:italic 400 21px/1.5 'Cormorant Garamond',serif;
     color:var(--ink);text-wrap:balance}
+  /* Two brass rules of unequal length under the mark, the shorter one centred:
+     a tail-piece, not a divider. */
+  .leaf::after{content:"";display:block;width:20px;height:1px;margin:22px auto 0;
+    background:var(--brass);opacity:.5}
 
   /* ── The act ── */
   .bar{position:fixed;bottom:0;left:0;right:0;display:flex;flex-direction:column;
@@ -195,8 +200,8 @@
       <span class="label" data-t="chip3"></span>
     </div>
 
-    <figure class="niche">
-      <div class="frame" id="niche">
+    <figure class="niche" id="niche">
+      <div class="frame">
         <img src="shots/niche.jpg" width="452" height="682" alt="">
         <div class="tally">
           <div class="n" id="tallyN">0</div>
@@ -247,7 +252,10 @@
       <div><h4 data-t="s3t"></h4><p data-t="s3d"></p></div></div>
   </section>
 
-  <div class="leaf"><p data-t="quote"></p></div>
+  <div class="leaf">
+    <img src="icon-512.png" width="30" height="30" alt="">
+    <p data-t="quote"></p>
+  </div>
 
   <div class="bar">
     <a class="cta" id="install" href="app.html"></a>
@@ -267,7 +275,7 @@
   var COPY = {
     uk: {
       h1a: 'Твій супутник у', h1b: 'мантра-практиці',
-      lead: 'Лічильник мантр, ретрити й буддійський календар — в одному застосунку.',
+      lead: 'Лічильник мантр, ретрити й буддійський календар — в одному застосунку.',
       chip1: 'Без інтернету', chip2: 'Без акаунта', chip3: 'Без реклами',
       tapHint: 'Торкнись — порахуй',
       featTitle: 'Три речі, які тримають практику',
@@ -286,7 +294,7 @@
     },
     en: {
       h1a: 'Your companion in', h1b: 'mantra practice',
-      lead: 'A mantra counter, retreats and the Buddhist calendar — in one app.',
+      lead: 'A mantra counter, retreats and the Buddhist calendar — in one app.',
       chip1: 'Works offline', chip2: 'No account', chip3: 'No ads',
       tapHint: 'Tap to count',
       featTitle: 'Three things that hold a practice',
