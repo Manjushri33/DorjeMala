@@ -47,10 +47,7 @@
   header{display:flex;align-items:center;justify-content:space-between;
     padding:24px 26px 0}
   .brand{display:flex;align-items:center;gap:11px}
-  .mark{width:34px;height:34px;position:relative;display:grid;place-items:center}
-  .mark .beads{position:absolute;inset:0;animation:turn 60s linear infinite}
-  .mark .vajra{position:relative;width:17px;height:17px}
-  @keyframes turn{to{transform:rotate(360deg)}}
+  .mark{width:34px;height:34px;border-radius:9px;display:block}
   .wordmark{font:500 20px/1 'Cormorant Garamond',serif;letter-spacing:.02em}
   .wordmark span{color:var(--brass)}
   .langs{display:flex;gap:14px}
@@ -180,26 +177,7 @@
 
   <header>
     <div class="brand">
-      <div class="mark">
-        <svg class="beads" viewBox="0 0 34 34" fill="var(--brass)" aria-hidden="true">
-          <circle cx="17" cy="2.4" r="1.5"/><circle cx="27.3" cy="6.7" r="1.5"/>
-          <circle cx="31.6" cy="17" r="1.5"/><circle cx="27.3" cy="27.3" r="1.5"/>
-          <circle cx="17" cy="31.6" r="1.5"/><circle cx="6.7" cy="27.3" r="1.5"/>
-          <circle cx="2.4" cy="17" r="1.5"/><circle cx="6.7" cy="6.7" r="1.5"/>
-        </svg>
-        <svg class="vajra" viewBox="0 0 100 100" fill="none" stroke="var(--brass)"
-             stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M50,42 L50,26"/><path d="M50,44 C41,36 43,28 50,26"/>
-          <path d="M50,44 C59,36 57,28 50,26"/>
-          <path d="M50,58 L50,74"/><path d="M50,56 C41,64 43,72 50,74"/>
-          <path d="M50,56 C59,64 57,72 50,74"/>
-          <path d="M42,50 L26,50"/><path d="M44,50 C36,41 28,43 26,50"/>
-          <path d="M44,50 C36,59 28,57 26,50"/>
-          <path d="M58,50 L74,50"/><path d="M56,50 C64,41 72,43 74,50"/>
-          <path d="M56,50 C64,59 72,57 74,50"/>
-          <circle cx="50" cy="50" r="7" fill="var(--brass)" stroke="none"/>
-        </svg>
-      </div>
+      <img class="mark" src="icon-512.png" width="34" height="34" alt="">
       <span class="wordmark">Dorje<span>Mala</span></span>
     </div>
     <div class="langs">
