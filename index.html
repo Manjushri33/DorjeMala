@@ -47,7 +47,11 @@
   header{display:flex;align-items:center;justify-content:space-between;
     padding:24px 26px 0}
   .brand{display:flex;align-items:center;gap:11px}
-  .mark{width:34px;height:34px;border-radius:9px;display:block}
+  .mark{width:34px;height:34px;display:block;color:var(--brass);fill:currentColor}
+  .colomark{width:30px;height:30px;display:inline-block;color:var(--brass);
+    fill:currentColor;opacity:.62}
+  .beads{transform-origin:50% 50%;animation:turn 64s linear infinite}
+  @keyframes turn{to{transform:rotate(360deg)}}
   .wordmark{font:500 20px/1 'Cormorant Garamond',serif;letter-spacing:.02em}
   .wordmark span{color:var(--brass)}
   .langs{display:flex;gap:14px}
@@ -142,7 +146,6 @@
   /* A colophon: the printer's device, then the closing line. The mark is the
      app's own, set small and dim — the way a book signs off. */
   .leaf{margin:64px 26px 0;text-align:center}
-  .leaf img{width:30px;height:30px;border-radius:8px;opacity:.55;display:inline-block}
   .leaf p{margin:20px 0 0;font:italic 400 21px/1.5 'Cormorant Garamond',serif;
     color:var(--ink);text-wrap:balance}
   /* Two brass rules of unequal length under the mark, the shorter one centred:
@@ -178,11 +181,42 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="dm-mark">
+    <g class="beads">
+      <circle cx="50" cy="6" r="2.4"/><circle cx="61.4" cy="7.5" r="2.4"/>
+      <circle cx="72.1" cy="11.9" r="2.4"/><circle cx="81.2" cy="18.8" r="2.4"/>
+      <circle cx="88.1" cy="27.9" r="2.4"/><circle cx="92.5" cy="38.6" r="2.4"/>
+      <circle cx="94" cy="50" r="2.4"/><circle cx="92.5" cy="61.4" r="2.4"/>
+      <circle cx="88.1" cy="72.1" r="2.4"/><circle cx="81.2" cy="81.2" r="2.4"/>
+      <circle cx="72.1" cy="88.1" r="2.4"/><circle cx="61.4" cy="92.5" r="2.4"/>
+      <circle cx="50" cy="94" r="2.4"/><circle cx="38.6" cy="92.5" r="2.4"/>
+      <circle cx="27.9" cy="88.1" r="2.4"/><circle cx="18.8" cy="81.2" r="2.4"/>
+      <circle cx="11.9" cy="72.1" r="2.4"/><circle cx="7.5" cy="61.4" r="2.4"/>
+      <circle cx="6" cy="50" r="2.4"/><circle cx="7.5" cy="38.6" r="2.4"/>
+      <circle cx="11.9" cy="27.9" r="2.4"/><circle cx="18.8" cy="18.8" r="2.4"/>
+      <circle cx="27.9" cy="11.9" r="2.4"/><circle cx="38.6" cy="7.5" r="2.4"/>
+    </g>
+    <g fill="none" stroke="currentColor" stroke-width="4.4" stroke-linecap="round"
+       stroke-linejoin="round">
+      <path d="M50,44 L50,31"/><path d="M50,45 C43,39 44,33 50,31"/>
+      <path d="M50,45 C57,39 56,33 50,31"/>
+      <path d="M50,56 L50,69"/><path d="M50,55 C43,61 44,67 50,69"/>
+      <path d="M50,55 C57,61 56,67 50,69"/>
+      <path d="M44,50 L31,50"/><path d="M45,50 C39,43 33,44 31,50"/>
+      <path d="M45,50 C39,57 33,56 31,50"/>
+      <path d="M56,50 L69,50"/><path d="M55,50 C61,43 67,44 69,50"/>
+      <path d="M55,50 C61,57 67,56 69,50"/>
+    </g>
+    <circle cx="50" cy="50" r="4.6"/>
+  </g>
+</defs></svg>
+
 <div class="page">
 
   <header>
     <div class="brand">
-      <img class="mark" src="icon-512.png" width="34" height="34" alt="">
+      <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#dm-mark"/></svg>
       <span class="wordmark">Dorje<span>Mala</span></span>
     </div>
     <div class="langs">
@@ -253,7 +287,7 @@
   </section>
 
   <div class="leaf">
-    <img src="icon-512.png" width="30" height="30" alt="">
+    <svg class="colomark" viewBox="0 0 100 100" aria-hidden="true"><use href="#dm-mark"/></svg>
     <p data-t="quote"></p>
   </div>
 
@@ -381,7 +415,7 @@
 
   var lb = document.getElementById('lb');
   document.addEventListener('click', function (e) {
-    if (e.target.tagName !== 'IMG' || !e.target.closest('.shot, .niche')) return;
+    if (e.target.tagName !== 'IMG' || !e.target.closest('.shot')) return;
     lb.innerHTML = '<img src="' + e.target.src + '" alt="">';
     lb.showModal();
   });
