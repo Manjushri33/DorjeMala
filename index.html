@@ -95,10 +95,12 @@
     font-feature-settings:'lnum' 1,'tnum' 1}
   /* 108 beads, one per recitation. They wrap into rows; a full round lights
      every one of them. */
-  .mala{display:flex;justify-content:center;gap:3px;margin-top:13px;flex-wrap:wrap;
-    max-width:340px;margin-left:auto;margin-right:auto}
-  .mala i{width:3.5px;height:3.5px;border-radius:50%;background:rgba(232,223,212,.14);
-    transition:background .25s ease}
+  /* Exactly 54 per row, so 108 makes two even rows and never leaves a stub.
+     54 x 4px + 53 x 2.5px = 348.5px. flex:none, or they shrink and overflow. */
+  .mala{display:flex;flex-wrap:wrap;gap:2.5px;margin:14px auto 0;width:348.5px;
+    max-width:100%}
+  .mala i{flex:0 0 auto;width:4px;height:4px;border-radius:50%;
+    background:rgba(232,223,212,.13);transition:background .25s ease}
   .mala i.on{background:var(--brass)}
   .niche .hint{margin-top:14px;text-align:center;transition:opacity .8s ease}
   /* Vignette, so the image sits in the wood instead of on top of it. */
