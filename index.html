@@ -93,8 +93,12 @@
     letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
     font-variant-numeric:lining-nums tabular-nums;
     font-feature-settings:'lnum' 1,'tnum' 1}
-  .mala{display:flex;justify-content:center;gap:4px;margin-top:11px;flex-wrap:wrap}
-  .mala i{width:5px;height:5px;border-radius:50%;background:rgba(232,223,212,.16)}
+  /* 108 beads, one per recitation. They wrap into rows; a full round lights
+     every one of them. */
+  .mala{display:flex;justify-content:center;gap:3px;margin-top:13px;flex-wrap:wrap;
+    max-width:340px;margin-left:auto;margin-right:auto}
+  .mala i{width:3.5px;height:3.5px;border-radius:50%;background:rgba(232,223,212,.14);
+    transition:background .25s ease}
   .mala i.on{background:var(--brass)}
   .niche .hint{margin-top:14px;text-align:center;transition:opacity .8s ease}
   /* Vignette, so the image sits in the wood instead of on top of it. */
@@ -385,23 +389,23 @@
   };
 
   // A mala is 108 beads; the row shows 27 and fills four times per round.
-  var MALA = 108, BEADS = 27, count = 0;
+  var MALA = 108, count = 0;
   var mala = document.getElementById('mala');
-  for (var b = 0; b < BEADS; b++) mala.appendChild(document.createElement('i'));
+  for (var b = 0; b < MALA; b++) mala.appendChild(document.createElement('i'));
 
   function tally() {
     document.getElementById('tallyN').textContent = count.toLocaleString(
       lang === 'uk' ? 'uk-UA' : 'en-US');
     document.getElementById('tallySub').textContent =
       COPY[lang].round + ' ' + (count % MALA) + ' / ' + MALA;
-    var lit = Math.floor((count % MALA) / (MALA / BEADS));
+    var lit = count % MALA === 0 && count > 0 ? MALA : count % MALA;
     [].forEach.call(mala.children, function (d, i) { d.className = i < lit ? 'on' : ''; });
   }
 
   document.getElementById('niche').addEventListener('click', function () {
     count++;
     var full = count % MALA === 0;
-    try { navigator.vibrate && navigator.vibrate(full ? [22, 40, 22] : 11); } catch (e) {}
+    try { navigator.vibrate && navigator.vibrate(full ? [140, 60, 140] : 120); } catch (e) {}
     document.getElementById('hint').style.opacity = count > 2 ? 0 : 1;
     tally();
   });
