@@ -63,8 +63,10 @@
   .hero{padding:44px 26px 0;text-align:center}
   h1{margin:0;font:400 44px/1.08 'Cormorant Garamond',serif;letter-spacing:-.01em}
   h1 em{display:block;font-style:italic;color:var(--brass)}
-  .lead{margin:20px auto 0;max-width:27ch;font-size:16px;line-height:1.7;
-    color:var(--ink);text-wrap:balance}
+  /* Two even lines. A narrower measure sent the em dash to a third line on
+     its own, which is the ugliest break a sentence can make. */
+  .lead{margin:20px auto 0;max-width:min(36ch,100%);font-size:16px;line-height:1.72;
+    color:var(--ink);text-wrap:balance;hanging-punctuation:none}
   .chips{margin-top:26px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
   .chips span{position:relative}
   .chips span+span::before{content:"";position:absolute;left:-11px;top:50%;
@@ -76,12 +78,25 @@
   .niche{margin:40px auto 0;width:268px;position:relative}
   .niche .frame{border:1px solid var(--rule);border-radius:134px 134px 4px 4px;
     padding:7px;background:linear-gradient(180deg,#33291f,#241d18)}
-  .niche img{display:block;width:100%;height:auto;border-radius:128px 128px 2px 2px;
-    filter:sepia(.12) saturate(.94)}
+  .niche img{display:block;width:100%;height:auto;border-radius:128px 128px 0 0;
+    filter:sepia(.1) saturate(.96)}
+  /* Tapping the niche counts, exactly as it does in the app. This is the one
+     place a visitor can feel the product before installing it. */
+  .niche .frame{cursor:pointer;user-select:none;-webkit-user-select:none}
+  .tally{background:#0f0c0a;border-radius:0 0 2px 2px;padding:14px 14px 16px;
+    text-align:center}
+  .tally .n{font:400 40px/1 'Cormorant Garamond',serif;letter-spacing:.02em;
+    color:var(--parchment);font-variant-numeric:tabular-nums}
+  .tally .sub{margin-top:7px;font:500 9.5px/1 'Cormorant Garamond',serif;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .mala{display:flex;justify-content:center;gap:3px;margin-top:11px;flex-wrap:wrap}
+  .mala i{width:4px;height:4px;border-radius:50%;background:rgba(232,223,212,.16)}
+  .mala i.on{background:var(--brass)}
+  .niche .hint{margin-top:14px;text-align:center;transition:opacity .8s ease}
   /* Vignette, so the image sits in the wood instead of on top of it. */
   .niche .frame::after{content:"";position:absolute;inset:7px;pointer-events:none;
     border-radius:128px 128px 2px 2px;
-    box-shadow:inset 0 0 60px 12px rgba(20,16,13,.72)}
+    box-shadow:inset 0 0 46px 10px rgba(20,16,13,.55)}
   .niche figcaption{margin-top:16px;text-align:center}
 
   /* ── Sections ── */
@@ -127,13 +142,11 @@
   .step h4{margin:0 0 6px;font:500 21px/1.2 'Cormorant Garamond',serif}
   .step p{margin:0;font-size:15.5px;line-height:1.6;color:var(--ink);text-wrap:pretty}
 
-  /* The one inversion: a leaf of the book. */
-  .leaf{margin-top:64px;background:var(--parchment);color:#241d17;
-    padding:52px 34px;text-align:center}
-  .leaf p{margin:0;font:italic 400 25px/1.42 'Cormorant Garamond',serif;
-    text-wrap:balance}
-  .leaf::before{content:"";display:block;width:34px;height:1px;margin:0 auto 24px;
-    background:rgba(36,29,23,.35)}
+  /* A colophon, not a banner: the page ends quietly on the same ground. */
+  .leaf{margin:70px 26px 0;padding:34px 0 0;text-align:center;
+    border-top:1px solid var(--rule)}
+  .leaf p{margin:0;font:italic 400 21px/1.5 'Cormorant Garamond',serif;
+    color:var(--ink);text-wrap:balance}
 
   /* ── The act ── */
   .bar{position:fixed;bottom:0;left:0;right:0;display:flex;flex-direction:column;
@@ -205,8 +218,15 @@
     </div>
 
     <figure class="niche">
-      <div class="frame"><img src="shots/niche.jpg" width="512" height="859" alt=""></div>
-      <figcaption class="label" data-t="capCounter"></figcaption>
+      <div class="frame" id="niche">
+        <img src="shots/niche.jpg" width="452" height="682" alt="">
+        <div class="tally">
+          <div class="n" id="tallyN">0</div>
+          <div class="sub" id="tallySub"></div>
+          <div class="mala" id="mala"></div>
+        </div>
+      </div>
+      <figcaption class="label hint" id="hint" data-t="tapHint"></figcaption>
     </figure>
   </div>
 
@@ -271,7 +291,7 @@
       h1a: 'Твій супутник у', h1b: 'мантра-практиці',
       lead: 'Лічильник мантр, ретрити й буддійський календар — в одному застосунку.',
       chip1: 'Без інтернету', chip2: 'Без акаунта', chip3: 'Без реклами',
-      capCounter: 'Екран лічильника',
+      tapHint: 'Торкнись — порахуй',
       featTitle: 'Три речі, які тримають практику',
       f1t: 'Лічильник мантр', f1d: 'Рахуй повторення мантр і зберігай свої накопичення.',
       f2t: 'Ретрити', f2d: 'Створюй ретрити, стеж за щоденною практикою та прогресом.',
@@ -283,14 +303,14 @@
       s2t: 'Іконка на екрані', s2d: 'Застосунок відкривається як звичайний, на весь екран. Оновлення приходять самі.',
       s3t: 'Обери мову', s3d: 'При першому запуску застосунок спитає мову й запропонує тур, який створить першу мантру.',
       quote: 'Працює без інтернету. Дані залишаються на твоєму пристрої.',
-      install: 'Встановити', open: 'Відкрити',
+      install: 'Встановити', open: 'Відкрити', round: 'мала',
       barnote: 'Без завантажень і без реєстрації.'
     },
     en: {
       h1a: 'Your companion in', h1b: 'mantra practice',
       lead: 'A mantra counter, retreats and the Buddhist calendar — in one app.',
       chip1: 'Works offline', chip2: 'No account', chip3: 'No ads',
-      capCounter: 'The counter',
+      tapHint: 'Tap to count',
       featTitle: 'Three things that hold a practice',
       f1t: 'Mantra counter', f1d: 'Count mantra repetitions and keep your accumulations.',
       f2t: 'Retreats', f2d: 'Create retreats and follow your daily practice and progress.',
@@ -302,12 +322,12 @@
       s2t: 'An icon appears', s2d: 'It opens like any other app, full screen. Updates arrive on their own.',
       s3t: 'Pick a language', s3d: 'On first launch the app asks for a language and offers a tour that creates your first mantra.',
       quote: 'Works offline. Your data stays on your device.',
-      install: 'Install', open: 'Open',
+      install: 'Install', open: 'Open', round: 'mala',
       barnote: 'No downloads, no sign-up.'
     }
   };
 
-  var deferred = null, saved = null;
+  var deferred = null, wasInstalled = false, saved = null;
   try { saved = localStorage.getItem('dm_site_lang'); } catch (e) {}
   var lang = saved || (/^(uk|ru)/i.test(navigator.language || '') ? 'uk' : 'en');
 
@@ -317,10 +337,12 @@
     document.querySelectorAll('[data-t]').forEach(function (el) {
       el.textContent = t[el.getAttribute('data-t')];
     });
-    document.getElementById('install').textContent = deferred ? t.install : t.open;
-    document.getElementById('barnote').textContent = deferred ? t.barnote : '';
+    var installed = matchMedia('(display-mode: standalone)').matches || wasInstalled;
+    document.getElementById('install').textContent = installed ? t.open : t.install;
+    document.getElementById('barnote').textContent = installed ? '' : t.barnote;
     document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
     document.getElementById('en').className = lang === 'en' ? 'on' : '';
+    tally();
   }
 
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
@@ -329,13 +351,37 @@
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault(); deferred = e; draw();
   });
-  window.addEventListener('appinstalled', function () { deferred = null; draw(); });
+  window.addEventListener('appinstalled', function () {
+    deferred = null; wasInstalled = true; draw();
+  });
   document.getElementById('install').onclick = function (e) {
     if (!deferred) return;
     e.preventDefault();
     deferred.prompt();
     deferred.userChoice.then(function () { deferred = null; draw(); });
   };
+
+  // A mala is 108 beads; the row shows 27 and fills four times per round.
+  var MALA = 108, BEADS = 27, count = 0;
+  var mala = document.getElementById('mala');
+  for (var b = 0; b < BEADS; b++) mala.appendChild(document.createElement('i'));
+
+  function tally() {
+    document.getElementById('tallyN').textContent = count.toLocaleString(
+      lang === 'uk' ? 'uk-UA' : 'en-US');
+    document.getElementById('tallySub').textContent =
+      COPY[lang].round + ' ' + (count % MALA) + ' / ' + MALA;
+    var lit = Math.floor((count % MALA) / (MALA / BEADS));
+    [].forEach.call(mala.children, function (d, i) { d.className = i < lit ? 'on' : ''; });
+  }
+
+  document.getElementById('niche').addEventListener('click', function () {
+    count++;
+    var full = count % MALA === 0;
+    try { navigator.vibrate && navigator.vibrate(full ? [22, 40, 22] : 11); } catch (e) {}
+    document.getElementById('hint').style.opacity = count > 2 ? 0 : 1;
+    tally();
+  });
 
   var gallery = document.getElementById('gallery'), dots = document.getElementById('dots');
   var n = gallery.querySelectorAll('img').length;
