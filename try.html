@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DorjeMala — лічильник мантр</title>
+<meta name="description" content="Лічильник мантр, ретрити й буддійський календар — в одному застосунку. Працює без інтернету, дані залишаються на пристрої.">
+<meta name="theme-color" content="#1C1714">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="DorjeMala — лічильник мантр">
+<meta property="og:description" content="Лічильник мантр, ретрити й буддійський календар — в одному застосунку.">
+<meta property="og:image" content="icon-512.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&display=swap&subset=cyrillic,latin" rel="stylesheet">
+<style>
+  /* ── The world ───────────────────────────────────────────────────────────
+     Lacquered wood, parchment and brass. Everything sits either on the ground
+     or on an oak surface; nothing floats. Corners are 4px because a shrine is
+     joinery, not a rounded card. The one inversion on the page is the closing
+     block, set on parchment — a page from the book, and the only place the
+     values flip.
+     Two typefaces, both carrying Cyrillic: Cormorant Garamond sets every
+     display line and every small-caps label, Literata carries the reading text.
+     No sans-serif anywhere.                                                  */
+  :root{
+    --ground:#1C1714; --oak:#251E19; --leather:#3D332B; --rule:#4A3F35;
+    --parchment:#E8DFD4; --ink:#9C8B7A; --brass:#C9A962; --brass-lit:#E3C98D;
+    --seal:#8B2635;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--ground)}
+  body{color:var(--parchment);font:400 16.5px/1.62 Literata,Georgia,serif;
+    min-height:100vh;display:flex;justify-content:center;
+    -webkit-font-smoothing:antialiased}
+  ::selection{background:rgba(201,169,98,.3)}
+  .page{width:100%;max-width:520px;position:relative;padding-bottom:128px}
+
+  /* Small caps in Cormorant carry every label; Cinzel has no Cyrillic. */
+  .label{font:500 11.5px/1 'Cormorant Garamond',serif;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--ink)}
+
+  /* ── Header ── */
+  header{display:flex;align-items:center;justify-content:space-between;
+    padding:24px 26px 0}
+  .brand{display:flex;align-items:center;gap:11px}
+  .mark{width:34px;height:34px;position:relative;display:grid;place-items:center}
+  .mark .beads{position:absolute;inset:0;animation:turn 60s linear infinite}
+  .mark .vajra{position:relative;width:17px;height:17px}
+  @keyframes turn{to{transform:rotate(360deg)}}
+  .wordmark{font:500 20px/1 'Cormorant Garamond',serif;letter-spacing:.02em}
+  .wordmark span{color:var(--brass)}
+  .langs{display:flex;gap:14px}
+  .langs button{appearance:none;background:0;border:0;cursor:pointer;padding:4px 0;
+    font:500 11.5px/1 'Cormorant Garamond',serif;letter-spacing:.2em;
+    color:var(--ink);border-bottom:1px solid transparent}
+  .langs button.on{color:var(--brass);border-bottom-color:var(--brass)}
+
+  /* ── Hero ── */
+  .hero{padding:44px 26px 0;text-align:center}
+  h1{margin:0;font:400 44px/1.08 'Cormorant Garamond',serif;letter-spacing:-.01em}
+  h1 em{display:block;font-style:italic;color:var(--brass)}
+  .lead{margin:20px auto 0;max-width:330px;font-size:16px;line-height:1.65;
+    color:var(--ink);text-wrap:pretty}
+  .chips{margin-top:26px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
+  .chips span{position:relative}
+  .chips span+span::before{content:"";position:absolute;left:-11px;top:50%;
+    width:3px;height:3px;margin-top:-1.5px;border-radius:50%;background:var(--rule)}
+
+  /* ── The arch ────────────────────────────────────────────────────────────
+     A thangka belongs in a niche, not behind text. This is the page's one
+     large gesture: the counter screen, whole, framed, lit from the top. */
+  .niche{margin:40px auto 0;width:268px;position:relative}
+  .niche .frame{border:1px solid var(--rule);border-radius:134px 134px 4px 4px;
+    padding:7px;background:linear-gradient(180deg,#33291f,#241d18)}
+  .niche img{display:block;width:100%;border-radius:128px 128px 2px 2px;
+    filter:sepia(.12) saturate(.94)}
+  /* Vignette, so the image sits in the wood instead of on top of it. */
+  .niche .frame::after{content:"";position:absolute;inset:7px;pointer-events:none;
+    border-radius:128px 128px 2px 2px;
+    box-shadow:inset 0 0 60px 12px rgba(20,16,13,.72)}
+  .niche figcaption{margin-top:16px;text-align:center}
+
+  /* ── Sections ── */
+  section{padding:64px 26px 0}
+  .sechead{margin:0 0 4px;font:italic 400 27px/1.25 'Cormorant Garamond',serif;
+    color:var(--parchment)}
+  .sechead+.label{display:block;margin-bottom:26px}
+
+  /* Features: on the ground, divided by brass hairlines. Not cards. */
+  .feat{display:flex;gap:20px;align-items:baseline;padding:22px 0;
+    border-top:1px solid var(--rule)}
+  .feat:last-of-type{border-bottom:1px solid var(--rule)}
+  .feat .g{flex:0 0 auto;width:22px;text-align:center;font-size:17px;
+    color:var(--brass);line-height:1}
+  .feat h3{margin:0 0 6px;font:500 21px/1.2 'Cormorant Garamond',serif;
+    letter-spacing:.005em}
+  .feat p{margin:0;font-size:15.5px;line-height:1.6;color:var(--ink);text-wrap:pretty}
+
+  /* Gallery: the same arch, small, four times. */
+  .inside{padding:64px 0 0}
+  .inside .sechead,.inside .label{margin-left:26px;margin-right:26px}
+  .gallery{display:flex;gap:16px;overflow-x:auto;padding:0 26px 4px;
+    scroll-snap-type:x mandatory;scrollbar-width:none}
+  .gallery::-webkit-scrollbar{display:none}
+  .shot{flex:0 0 auto;width:182px;margin:0;scroll-snap-align:center}
+  .shot .frame{border:1px solid var(--rule);border-radius:91px 91px 4px 4px;
+    padding:5px;background:linear-gradient(180deg,#2e251d,#221b16)}
+  .shot img{display:block;width:100%;height:352px;object-fit:cover;
+    object-position:top;border-radius:87px 87px 2px 2px;cursor:zoom-in;
+    filter:sepia(.1) saturate(.95)}
+  .shot figcaption{margin-top:13px;text-align:center}
+  .dots{display:flex;justify-content:center;gap:9px;margin-top:22px}
+  .dots i{width:5px;height:5px;border-radius:50%;background:var(--rule);
+    transition:background .4s ease}
+  .dots i.on{background:var(--brass)}
+
+  /* Steps: Roman numerals, the scholarly register. */
+  .step{display:flex;gap:20px;align-items:baseline;padding:22px 0;
+    border-top:1px solid var(--rule)}
+  .step:last-of-type{border-bottom:1px solid var(--rule)}
+  .step .n{flex:0 0 auto;width:22px;text-align:center;color:var(--brass);
+    font:400 19px/1 'Cormorant Garamond',serif;letter-spacing:.04em}
+  .step h4{margin:0 0 6px;font:500 21px/1.2 'Cormorant Garamond',serif}
+  .step p{margin:0;font-size:15.5px;line-height:1.6;color:var(--ink);text-wrap:pretty}
+
+  /* The one inversion: a leaf of the book. */
+  .leaf{margin-top:64px;background:var(--parchment);color:#241d17;
+    padding:52px 34px;text-align:center}
+  .leaf p{margin:0;font:italic 400 25px/1.42 'Cormorant Garamond',serif;
+    text-wrap:balance}
+  .leaf::before{content:"";display:block;width:34px;height:1px;margin:0 auto 24px;
+    background:rgba(36,29,23,.35)}
+
+  /* ── The act ── */
+  .bar{position:fixed;bottom:0;left:0;right:0;display:flex;flex-direction:column;
+    align-items:center;gap:11px;padding:18px 26px calc(20px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(28,23,20,0),rgba(28,23,20,.94) 32%,var(--ground));
+    pointer-events:none;z-index:20}
+  .cta{pointer-events:auto;width:100%;max-width:468px;min-height:56px;
+    display:flex;align-items:center;justify-content:center;border-radius:4px;
+    background:var(--brass);color:#221b12;text-decoration:none;
+    font:500 17px/1 'Cormorant Garamond',serif;letter-spacing:.09em;
+    text-transform:uppercase;transition:background .35s ease}
+  .cta:hover{background:var(--brass-lit)}
+  .cta:active{background:var(--brass-lit)}
+  .barnote{pointer-events:auto;max-width:468px;text-align:center;
+    font-size:12.5px;line-height:1.45;color:var(--ink)}
+
+  /* Full-size viewing, native dialog. */
+  #lb{border:0;padding:0;background:0;max-width:100vw;max-height:100vh}
+  #lb::backdrop{background:rgba(20,16,13,.95)}
+  #lb img{max-width:92vw;max-height:92vh;display:block;border-radius:4px;cursor:zoom-out}
+
+  /* Desktop: the column keeps its measure, the wood fills the room. */
+  @media (min-width:900px){
+    body{background:radial-gradient(120% 70% at 50% 0%,#241d18,var(--ground) 62%)}
+    .page{max-width:560px}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brand">
+      <div class="mark">
+        <svg class="beads" viewBox="0 0 34 34" fill="var(--brass)" aria-hidden="true">
+          <circle cx="17" cy="2.4" r="1.5"/><circle cx="27.3" cy="6.7" r="1.5"/>
+          <circle cx="31.6" cy="17" r="1.5"/><circle cx="27.3" cy="27.3" r="1.5"/>
+          <circle cx="17" cy="31.6" r="1.5"/><circle cx="6.7" cy="27.3" r="1.5"/>
+          <circle cx="2.4" cy="17" r="1.5"/><circle cx="6.7" cy="6.7" r="1.5"/>
+        </svg>
+        <svg class="vajra" viewBox="0 0 100 100" fill="none" stroke="var(--brass)"
+             stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M50,42 L50,26"/><path d="M50,44 C41,36 43,28 50,26"/>
+          <path d="M50,44 C59,36 57,28 50,26"/>
+          <path d="M50,58 L50,74"/><path d="M50,56 C41,64 43,72 50,74"/>
+          <path d="M50,56 C59,64 57,72 50,74"/>
+          <path d="M42,50 L26,50"/><path d="M44,50 C36,41 28,43 26,50"/>
+          <path d="M44,50 C36,59 28,57 26,50"/>
+          <path d="M58,50 L74,50"/><path d="M56,50 C64,41 72,43 74,50"/>
+          <path d="M56,50 C64,59 72,57 74,50"/>
+          <circle cx="50" cy="50" r="7" fill="var(--brass)" stroke="none"/>
+        </svg>
+      </div>
+      <span class="wordmark">Dorje<span>Mala</span></span>
+    </div>
+    <div class="langs">
+      <button type="button" id="uk">UK</button>
+      <button type="button" id="en">EN</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1><span data-t="h1a"></span> <em data-t="h1b"></em></h1>
+    <p class="lead" data-t="lead"></p>
+    <div class="chips">
+      <span class="label" data-t="chip1"></span>
+      <span class="label" data-t="chip2"></span>
+      <span class="label" data-t="chip3"></span>
+    </div>
+
+    <figure class="niche">
+      <div class="frame"><img src="shots/counter.jpg" width="512" height="1060" alt=""></div>
+      <figcaption class="label" data-t="capCounter"></figcaption>
+    </figure>
+  </div>
+
+  <section>
+    <h2 class="sechead" data-t="featTitle"></h2>
+    <span class="label" data-t="featKicker"></span>
+    <div class="feat"><div class="g">◉</div>
+      <div><h3 data-t="f1t"></h3><p data-t="f1d"></p></div></div>
+    <div class="feat"><div class="g">◒</div>
+      <div><h3 data-t="f2t"></h3><p data-t="f2d"></p></div></div>
+    <div class="feat"><div class="g">☸</div>
+      <div><h3 data-t="f3t"></h3><p data-t="f3d"></p></div></div>
+  </section>
+
+  <section class="inside">
+    <h2 class="sechead" data-t="insideTitle"></h2>
+    <span class="label" data-t="insideKicker"></span>
+    <div class="gallery" id="gallery">
+      <figure class="shot"><div class="frame">
+        <img src="shots/home.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <figcaption class="label" data-t="capHome"></figcaption></figure>
+      <figure class="shot"><div class="frame">
+        <img src="shots/retreat.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <figcaption class="label" data-t="capRetreat"></figcaption></figure>
+      <figure class="shot"><div class="frame">
+        <img src="shots/stats.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <figcaption class="label" data-t="capStats"></figcaption></figure>
+      <figure class="shot"><div class="frame">
+        <img src="shots/calendar.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <figcaption class="label" data-t="capCalendar"></figcaption></figure>
+    </div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+  </section>
+
+  <section>
+    <h2 class="sechead" data-t="stepsTitle"></h2>
+    <span class="label" data-t="stepsKicker"></span>
+    <div class="step"><div class="n">I</div>
+      <div><h4 data-t="s1t"></h4><p data-t="s1d"></p></div></div>
+    <div class="step"><div class="n">II</div>
+      <div><h4 data-t="s2t"></h4><p data-t="s2d"></p></div></div>
+    <div class="step"><div class="n">III</div>
+      <div><h4 data-t="s3t"></h4><p data-t="s3d"></p></div></div>
+  </section>
+
+  <div class="leaf"><p data-t="quote"></p></div>
+
+  <div class="bar">
+    <a class="cta" id="install" href="app.html"></a>
+    <div class="barnote" id="barnote"></div>
+  </div>
+</div>
+
+<dialog id="lb"></dialog>
+
+<script>
+(function () {
+  if (location.hash.indexOf('tgWebApp') >= 0 || window.TelegramWebviewProxy) {
+    location.replace('app.html' + location.hash);
+    return;
+  }
+
+  var COPY = {
+    uk: {
+      h1a: 'Твій супутник у', h1b: 'мантра-практиці',
+      lead: 'Лічильник мантр, ретрити й буддійський календар — в одному застосунку.',
+      chip1: 'Без інтернету', chip2: 'Без акаунта', chip3: 'Без реклами',
+      capCounter: 'Екран лічильника',
+      featTitle: 'Три речі, які тримають практику', featKicker: 'Що всередині',
+      f1t: 'Лічильник мантр', f1d: 'Рахуй повторення мантр і зберігай свої накопичення.',
+      f2t: 'Ретрити', f2d: 'Створюй ретрити, стеж за щоденною практикою та прогресом.',
+      f3t: 'Буддійський календар', f3d: 'Переглядай важливі буддійські дати, дні практик і свят.',
+      insideTitle: 'Всередині', insideKicker: 'Екрани застосунку',
+      capHome: 'Практика', capRetreat: 'Ретрит', capStats: 'Статистика', capCalendar: 'Календар',
+      stepsTitle: 'Встановлення — три кроки', stepsKicker: 'Як почати',
+      s1t: 'Натисни «Встановити»', s1d: 'Браузер запитає підтвердження. Нічого не завантажується, файлів шукати не треба.',
+      s2t: 'Іконка на екрані', s2d: 'Застосунок відкривається як звичайний, на весь екран. Оновлення приходять самі.',
+      s3t: 'Обери мову', s3d: 'При першому запуску застосунок спитає мову й запропонує тур, який створить першу мантру.',
+      quote: 'Працює без інтернету. Дані залишаються на твоєму пристрої.',
+      install: 'Встановити', open: 'Відкрити',
+      barnote: 'Без завантажень і без реєстрації.'
+    },
+    en: {
+      h1a: 'Your companion in', h1b: 'mantra practice',
+      lead: 'A mantra counter, retreats and the Buddhist calendar — in one app.',
+      chip1: 'Works offline', chip2: 'No account', chip3: 'No ads',
+      capCounter: 'The counter',
+      featTitle: 'Three things that hold a practice', featKicker: 'What is inside',
+      f1t: 'Mantra counter', f1d: 'Count mantra repetitions and keep your accumulations.',
+      f2t: 'Retreats', f2d: 'Create retreats and follow your daily practice and progress.',
+      f3t: 'Buddhist calendar', f3d: 'See important Buddhist dates, practice days and holidays.',
+      insideTitle: 'Inside', insideKicker: 'Screens of the app',
+      capHome: 'Practice', capRetreat: 'Retreat', capStats: 'Statistics', capCalendar: 'Calendar',
+      stepsTitle: 'Installing — three steps', stepsKicker: 'How to begin',
+      s1t: 'Tap “Install”', s1d: 'The browser asks you to confirm. Nothing is downloaded, no file to hunt for.',
+      s2t: 'An icon appears', s2d: 'It opens like any other app, full screen. Updates arrive on their own.',
+      s3t: 'Pick a language', s3d: 'On first launch the app asks for a language and offers a tour that creates your first mantra.',
+      quote: 'Works offline. Your data stays on your device.',
+      install: 'Install', open: 'Open',
+      barnote: 'No downloads, no sign-up.'
+    }
+  };
+
+  var deferred = null, saved = null;
+  try { saved = localStorage.getItem('dm_site_lang'); } catch (e) {}
+  var lang = saved || (/^(uk|ru)/i.test(navigator.language || '') ? 'uk' : 'en');
+
+  function draw() {
+    var t = COPY[lang];
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-t]').forEach(function (el) {
+      el.textContent = t[el.getAttribute('data-t')];
+    });
+    document.getElementById('install').textContent = deferred ? t.install : t.open;
+    document.getElementById('barnote').textContent = deferred ? t.barnote : '';
+    document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
+    document.getElementById('en').className = lang === 'en' ? 'on' : '';
+  }
+
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  }
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); deferred = e; draw();
+  });
+  window.addEventListener('appinstalled', function () { deferred = null; draw(); });
+  document.getElementById('install').onclick = function (e) {
+    if (!deferred) return;
+    e.preventDefault();
+    deferred.prompt();
+    deferred.userChoice.then(function () { deferred = null; draw(); });
+  };
+
+  var gallery = document.getElementById('gallery'), dots = document.getElementById('dots');
+  var n = gallery.querySelectorAll('img').length;
+  for (var i = 0; i < n; i++) dots.appendChild(document.createElement('i'));
+  function markDot() {
+    var k = Math.round(gallery.scrollLeft / (gallery.scrollWidth / n));
+    [].forEach.call(dots.children, function (d, j) { d.className = j === k ? 'on' : ''; });
+  }
+  gallery.addEventListener('scroll', markDot, { passive: true });
+  markDot();
+
+  var lb = document.getElementById('lb');
+  document.addEventListener('click', function (e) {
+    if (e.target.tagName !== 'IMG' || !e.target.closest('.shot, .niche')) return;
+    lb.innerHTML = '<img src="' + e.target.src + '" alt="">';
+    lb.showModal();
+  });
+  lb.addEventListener('click', function () { lb.close(); });
+
+  function pick(l) {
+    return function () {
+      lang = l;
+      try { localStorage.setItem('dm_site_lang', l); } catch (e) {}
+      draw();
+    };
+  }
+  document.getElementById('uk').onclick = pick('uk');
+  document.getElementById('en').onclick = pick('en');
+
+  draw();
+})();
+</script>
+</body>
+</html>
