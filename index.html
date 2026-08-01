@@ -93,8 +93,6 @@
     letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
     font-variant-numeric:lining-nums tabular-nums;
     font-feature-settings:'lnum' 1,'tnum' 1}
-  /* 108 beads, one per recitation. They wrap into rows; a full round lights
-     every one of them. */
   /* One row of 27, the wrist mala: four times round makes 108. One bead per
      tap, so the very first tap answers. */
   .mala{display:flex;justify-content:center;gap:4px;margin-top:12px}
@@ -269,16 +267,16 @@
     <h2 class="sechead" data-t="insideTitle"></h2>
     <div class="gallery" id="gallery">
       <figure class="shot"><div class="frame">
-        <img src="shots/home.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <img src="shots/home.jpg" width="498" height="1060" loading="lazy" alt=""></div>
         <figcaption class="label" data-t="capHome"></figcaption></figure>
       <figure class="shot"><div class="frame">
-        <img src="shots/retreat.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <img src="shots/retreat.jpg" width="498" height="1060" loading="lazy" alt=""></div>
         <figcaption class="label" data-t="capRetreat"></figcaption></figure>
       <figure class="shot"><div class="frame">
-        <img src="shots/stats.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <img src="shots/stats.jpg" width="498" height="1060" loading="lazy" alt=""></div>
         <figcaption class="label" data-t="capStats"></figcaption></figure>
       <figure class="shot"><div class="frame">
-        <img src="shots/calendar.jpg" width="512" height="1060" loading="lazy" alt=""></div>
+        <img src="shots/calendar.jpg" width="498" height="1060" loading="lazy" alt=""></div>
         <figcaption class="label" data-t="capCalendar"></figcaption></figure>
     </div>
     <div class="dots" id="dots" aria-hidden="true"></div>
@@ -370,6 +368,13 @@
     document.getElementById('barnote').textContent = installed ? '' : t.barnote;
     document.getElementById('uk').className = lang === 'uk' ? 'on' : '';
     document.getElementById('en').className = lang === 'en' ? 'on' : '';
+    // The gallery shows the app's own interface, so it has to speak the same
+    // language as the page. shots/ is Ukrainian, shots-en/ is English.
+    // The niche is a thangka with no interface in it, so it stays put.
+    var dir = lang === 'uk' ? 'shots/' : 'shots-en/';
+    document.querySelectorAll('.shot img').forEach(function (im) {
+      im.src = dir + im.src.replace(/^.*\//, '');
+    });
     tally();
   }
 
