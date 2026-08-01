@@ -52,7 +52,7 @@
     border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)}
   .langs button{appearance:none;border:0;cursor:pointer;font-family:inherit;font-size:12px;
     font-weight:700;letter-spacing:.06em;padding:7px 12px;border-radius:999px;
-    transition:all .18s ease;background:transparent;color:#7d7688}
+    transition:all .18s ease;background:transparent;color:#9a94a8}
   .langs button.on{background:rgba(217,182,120,.16);color:var(--gold)}
   .top{position:relative;padding:40px 22px;text-align:center}
   .iconwrap{display:grid;place-items:center}
@@ -67,7 +67,7 @@
   .lead{margin:18px auto 0;max-width:340px;font-size:16px;line-height:1.6;
     color:#a9a2b4;text-wrap:pretty}
   .chips{margin-top:30px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-    font-size:12.5px;color:#7d7688}
+    font-size:12.5px;color:#9a94a8}
   .chips span{padding:7px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.09);
     background:rgba(255,255,255,.02)}
   .phonewrap{position:relative;padding:0 22px;display:flex;justify-content:center}
@@ -78,7 +78,6 @@
      gallery shows a whole screen at once. */
   .phone .glass{border-radius:27px 27px 0 0;overflow:hidden;background:#100c16;height:300px}
   .phone .glass img{width:100%;height:auto;display:block}
-  .shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 
   section{padding:56px 22px 0}
   .sechead{margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;
@@ -101,8 +100,19 @@
   .inside .sechead{margin:0 22px}
   .gallery{margin-top:20px;display:flex;gap:14px;overflow-x:auto;padding:0 22px 4px;
     scroll-snap-type:x mandatory}
-  .shot{flex:0 0 auto;width:186px;height:362px;border-radius:20px;overflow:hidden;
-    border:1px solid rgba(255,255,255,.07);background:#100c16;scroll-snap-align:center}
+  .shot{flex:0 0 auto;width:186px;margin:0;scroll-snap-align:center}
+  .shot img{width:186px;height:362px;border-radius:20px;
+    border:1px solid rgba(255,255,255,.07);background:#100c16;cursor:zoom-in}
+  .shot figcaption{margin-top:9px;font-size:12.5px;line-height:1.4;
+    color:#948fa3;text-wrap:pretty}
+  .dots{display:flex;justify-content:center;gap:7px;margin-top:16px}
+  .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.16);
+    transition:background .2s}
+  .dots i.on{background:var(--gold)}
+  /* Native dialog: Esc, backdrop and focus trapping come free. */
+  #lb{border:0;padding:0;background:transparent;max-width:100vw;max-height:100vh}
+  #lb::backdrop{background:rgba(6,5,9,.92)}
+  #lb img{max-width:92vw;max-height:92vh;border-radius:14px;display:block;cursor:zoom-out}
 
   /* Same rhythm as the feature cards above: separate rounded cards, a round
      badge on the left, everything on one optical line. */
@@ -129,8 +139,8 @@
 
   footer{margin-top:44px;border-top:1px solid rgba(255,255,255,.06)}
   .foot{padding:22px;display:flex;align-items:center;justify-content:space-between;
-    font-size:13px;color:#6f697b}
-  .foot a{color:#6f697b}
+    font-size:13px;color:#948fa3}
+  .foot a{color:#948fa3}
 
   /* Desktop only: the app is for a phone, so hand the page over to one.
      Hidden below 900px, where the visitor is already holding the phone. */
@@ -155,7 +165,7 @@
      does not. The note under them says exactly that, in one line. */
   .ctarow{display:flex;gap:9px;width:100%;max-width:436px}
   .ctanote{pointer-events:auto;max-width:436px;font-size:11.5px;line-height:1.45;
-    color:#6f697b;text-align:center;text-wrap:pretty}
+    color:#948fa3;text-align:center;text-wrap:pretty}
   .cta.second{background:transparent;color:var(--gold);border:1px solid rgba(217,182,120,.34);
     box-shadow:none;font-weight:700;font-size:15px}
   .cta.second:hover{box-shadow:none;background:rgba(217,182,120,.07);color:var(--gold-soft)}
@@ -243,13 +253,22 @@
 
   <section class="inside">
     <p class="sechead" data-t="insideTitle"></p>
-    <div class="gallery dm-scroll">
-      <div class="shot"><img src="shots/counter.jpg" width="512" height="1060" alt="" loading="lazy"></div>
-      <div class="shot"><img src="shots/retreat.jpg" width="512" height="1060" alt="" loading="lazy"></div>
-      <div class="shot"><img src="shots/calendar.jpg" width="512" height="1060" alt="" loading="lazy"></div>
-      <div class="shot"><img src="shots/stats.jpg" width="512" height="1060" alt="" loading="lazy"></div>
+    <!-- Same order as the app's own tab bar: practice, retreats, statistics,
+         calendar. Tapping a shot opens it full size in a native <dialog>. -->
+    <div class="gallery dm-scroll" id="gallery">
+      <figure class="shot"><img src="shots/counter.jpg" width="512" height="1060" loading="lazy">
+        <figcaption data-t="capCounter"></figcaption></figure>
+      <figure class="shot"><img src="shots/retreat.jpg" width="512" height="1060" loading="lazy">
+        <figcaption data-t="capRetreat"></figcaption></figure>
+      <figure class="shot"><img src="shots/stats.jpg" width="512" height="1060" loading="lazy">
+        <figcaption data-t="capStats"></figcaption></figure>
+      <figure class="shot"><img src="shots/calendar.jpg" width="512" height="1060" loading="lazy">
+        <figcaption data-t="capCalendar"></figcaption></figure>
     </div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
   </section>
+
+  <dialog id="lb"></dialog>
 
   <section>
     <p class="sechead" data-t="stepsTitle"></p>
@@ -308,6 +327,10 @@
       f2t: 'Ретрити', f2d: 'Створюй ретрити, стеж за щоденною практикою та прогресом.',
       f3t: 'Буддійський календар', f3d: 'Переглядай важливі буддійські дати, дні практик і свят.',
       insideTitle: 'Всередині',
+      capCounter: 'Лічильник. Тханка на весь екран, під нею — прочитане і позиція в малі.',
+      capRetreat: 'Ретрит. Кілька мантр, спільний строк, прогрес по кожній.',
+      capStats: 'Статистика мантри. Два тижні, пів року, історія по днях.',
+      capCalendar: 'Календар. Особливі дні позначені, поруч — найближчі.',
       stepsTitle: 'Встановлення — три кроки',
       s1t: 'Натисни «Встановити»', s1d: 'Браузер запитає підтвердження. Нічого не завантажується, файлів шукати не треба.',
       s2t: 'Іконка на екрані', s2d: 'Застосунок відкривається як звичайний, на весь екран. Оновлення приходять самі.',
@@ -326,6 +349,10 @@
       f2t: 'Retreats', f2d: 'Create retreats and follow your daily practice and progress.',
       f3t: 'Buddhist calendar', f3d: 'See important Buddhist dates, practice days and holidays.',
       insideTitle: 'Inside',
+      capCounter: 'The counter. A thangka full screen, the count and the mala position under it.',
+      capRetreat: 'A retreat. Several mantras, one deadline, progress on each.',
+      capStats: 'Statistics for one mantra. Two weeks, six months, day by day.',
+      capCalendar: 'The calendar. Special days marked, the next ones listed below.',
       stepsTitle: 'Install in three steps',
       s1t: 'Tap “Install”', s1d: 'The browser asks you to confirm. Nothing is downloaded, no file to hunt for.',
       s2t: 'An icon appears', s2d: 'It opens like any other app, full screen. Updates arrive on their own.',
@@ -385,6 +412,27 @@
     deferred.prompt();
     deferred.userChoice.then(function () { deferred = null; draw(); });
   };
+
+  // Gallery: dots track the scroll, a tap opens the shot full size.
+  var gallery = document.getElementById('gallery');
+  var dots = document.getElementById('dots');
+  var shots = [].slice.call(gallery.querySelectorAll('img'));
+  shots.forEach(function () { dots.appendChild(document.createElement('i')); });
+
+  function markDot() {
+    var i = Math.round(gallery.scrollLeft / (gallery.scrollWidth / shots.length));
+    [].forEach.call(dots.children, function (d, n) { d.className = n === i ? 'on' : ''; });
+  }
+  gallery.addEventListener('scroll', markDot, { passive: true });
+  markDot();
+
+  var lb = document.getElementById('lb');
+  gallery.addEventListener('click', function (e) {
+    if (e.target.tagName !== 'IMG') return;
+    lb.innerHTML = '<img src="' + e.target.src + '" alt="">';
+    lb.showModal();
+  });
+  lb.addEventListener('click', function () { lb.close(); });
 
   function pick(l) {
     return function () {
