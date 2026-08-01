@@ -41,9 +41,12 @@ Everything is stored on the device in browser storage. Nothing is sent to third-
 
 | File | Purpose |
 |---|---|
-| `index.html` | the entire web app in a single file — this is the product |
-| `DorjeMala.apk` | the Android build, produced automatically from `index.html` |
+| `app.html` | the entire web app in a single file — this is the product |
+| `index.html` | the landing page: what a visitor sees first, with the install button |
 | `dorjemala-bot-worker.js` | the Telegram bot — a Cloudflare Worker |
+
+`DorjeMala.apk` is the Android build. It is no longer the way the app is
+distributed — see `BACKLOG.md` — but the build still runs and the file is kept.
 
 **Documentation**
 
@@ -51,6 +54,9 @@ Everything is stored on the device in browser storage. Nothing is sent to third-
 |---|---|
 | `README.md` | this file — start here |
 | `ARCHITECTURE.md` | architecture, data model, design system, how to edit the bundle |
+| `DESIGN.md` | the landing page: design world, the live counter, how screenshots are made |
+| `PRODUCT.md` | audience, voice, and the rule for using thangkas |
+| `BACKLOG.md` | decisions taken and postponed — read before proposing platform work |
 | `CALENDAR-UPDATE.md` | the yearly calendar update, step by step |
 | `HINTS.md` | contextual help texts for every screen |
 
@@ -60,13 +66,27 @@ Everything is stored on the device in browser storage. Nothing is sent to third-
 |---|---|
 | `android/` | the Android project, built by GitHub |
 | `.github/` | the automatic APK build |
-| `imajes/` | source images |
-| `tools/` | local helper scripts, not part of the repository |
-| `archive/` | previous versions of the app, kept in case a rollback is needed |
+| `uploads/img/` | thangkas the app and the calendar load by path |
+| `shots/` | screenshots of the app, Ukrainian — used by the landing page |
+| `shots-en/` | the same five screens in English; the gallery swaps folders with the language |
+| `tools/` | local helper scripts and the VAPID key generator |
+| `archive/` | previous versions and the landing design export |
 
-**Files the website needs next to `index.html`**
+**Files the website needs in the root**
 
-`manifest.json`, `sw.js`, `icon.svg` — these must stay in the root; the site loads them by path.
+`manifest.json`, `sw.js`, `icon.svg`, `icon-192.png`, `icon-512.png`,
+`icon-maskable-512.png`, `apple-touch-icon.png`, `qr.svg` — the site loads all of
+these by path, so they must stay next to `index.html`.
+
+**Not in the repository**
+
+`.claude/` and `.impeccable/` hold the design skills installed into this project.
+They are tooling, not product, and `.gitignore` keeps them out. To get them back:
+
+```
+npx impeccable install --providers=claude --scope=project
+uipro init --ai claude
+```
 
 ## Helper scripts (`tools/`)
 

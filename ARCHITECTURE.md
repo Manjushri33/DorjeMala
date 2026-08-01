@@ -149,6 +149,12 @@ The lifetime statistics screen offers **Save a copy** and **Restore from a copy*
 
 - **Tap anywhere in the area** — one repetition, short vibration.
 - **Completing a mala round** — a stronger vibration and a golden flash.
+- **Haptic patterns** live in one place, `vibrate(kind)`: `tap: 120`,
+  `mala: [140, 60, 140]`, `goal: [140, 60, 140, 60, 280]` (ms). Inside Telegram
+  the native `HapticFeedback` is preferred; `notificationOccurred` is used for
+  mala and goal because `impactOccurred` stays silent when the system's
+  "vibrate on touch" is off. These values were raised from 70/90 — the original
+  set was too faint to feel with the phone resting in the palm.
 - **Two fingers on the image** — magnify up to 4×; one finger pans a magnified image. A tap counts a repetition **always**, including while zoomed; a drag beyond 8 pixels does not count.
 - Top row: back, help, edit, statistics, calm mode.
 
@@ -202,6 +208,13 @@ Calendar symbols (`☸ ✦ ○ ● ◆ ❁`) are the exception: they are content
 ### 5.4 Motion
 
 Animations are short and restrained: `.13s` tap response, `.25s` layout change, `.3s` message appearance. Background breathing cycles run 6–9 seconds. The rule: during practice the screen should be quiet.
+
+**Startup.** Three things used to happen in a row when the installed app was
+opened: the system splash showed the mark, the page's own overlay covered it
+with flat `#0b0a10`, and the mark appeared again on the intro screen. It read as
+the logo showing twice. The overlay (`#__dc_splash`) now carries the same
+`icon.svg`, centred at 86px, so the mark is continuous from launch to first
+paint and never blinks out.
 
 ### 5.5 Messages
 
@@ -334,6 +347,9 @@ They **are** used, but access is dynamic — `t.EV[eventType]`, where the type i
 | File | Contents |
 |---|---|
 | `ARCHITECTURE.md` | this file — architecture, data, design, build |
+| `DESIGN.md` | the landing page — a separate design system from the app, do not mix them |
+| `PRODUCT.md` | audience, voice, and the rule for using thangkas |
+| `BACKLOG.md` | decisions taken and postponed |
 | `CALENDAR-UPDATE.md` | yearly calendar update checklist |
 | `HINTS.md` | contextual help texts for every screen |
 | `dorjemala-bot-worker.js` | bot code with setup instructions at the end |
