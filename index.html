@@ -86,10 +86,13 @@
      place a visitor can feel the product before installing it. */
   .tally{background:#0f0c0a;border-radius:0 0 2px 2px;padding:14px 14px 16px;
     text-align:center}
-  .tally .n{font:400 52px/1 'Cormorant Garamond',serif;letter-spacing:.02em;
-    color:var(--parchment);font-variant-numeric:tabular-nums}
-  .tally .sub{margin-top:16px;font:500 9.5px/1 'Cormorant Garamond',serif;
-    letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .tally .n{font:300 46px/1 Literata,Georgia,serif;letter-spacing:.01em;
+    color:var(--parchment);font-variant-numeric:lining-nums tabular-nums;
+    font-feature-settings:'lnum' 1,'tnum' 1}
+  .tally .sub{margin-top:16px;font:400 9.5px/1 Literata,Georgia,serif;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
+    font-variant-numeric:lining-nums tabular-nums;
+    font-feature-settings:'lnum' 1,'tnum' 1}
   .mala{display:flex;justify-content:center;gap:4px;margin-top:11px;flex-wrap:wrap}
   .mala i{width:5px;height:5px;border-radius:50%;background:rgba(232,223,212,.16)}
   .mala i.on{background:var(--brass)}
