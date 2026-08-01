@@ -95,12 +95,11 @@
     font-feature-settings:'lnum' 1,'tnum' 1}
   /* 108 beads, one per recitation. They wrap into rows; a full round lights
      every one of them. */
-  /* Exactly 54 per row, so 108 makes two even rows and never leaves a stub.
-     54 x 4px + 53 x 2.5px = 348.5px. flex:none, or they shrink and overflow. */
-  .mala{display:flex;flex-wrap:wrap;gap:2.5px;margin:14px auto 0;width:348.5px;
-    max-width:100%}
-  .mala i{flex:0 0 auto;width:4px;height:4px;border-radius:50%;
-    background:rgba(232,223,212,.13);transition:background .25s ease}
+  /* One row of 27, the wrist mala: four times round makes 108. One bead per
+     tap, so the very first tap answers. */
+  .mala{display:flex;justify-content:center;gap:4px;margin-top:12px}
+  .mala i{width:5px;height:5px;border-radius:50%;background:rgba(232,223,212,.15);
+    transition:background .2s ease}
   .mala i.on{background:var(--brass)}
   .niche .hint{margin-top:14px;text-align:center;transition:opacity .8s ease}
   /* Vignette, so the image sits in the wood instead of on top of it. */
@@ -391,16 +390,16 @@
   };
 
   // A mala is 108 beads; the row shows 27 and fills four times per round.
-  var MALA = 108, count = 0;
+  var MALA = 108, BEADS = 27, count = 0;
   var mala = document.getElementById('mala');
-  for (var b = 0; b < MALA; b++) mala.appendChild(document.createElement('i'));
+  for (var b = 0; b < BEADS; b++) mala.appendChild(document.createElement('i'));
 
   function tally() {
     document.getElementById('tallyN').textContent = count.toLocaleString(
       lang === 'uk' ? 'uk-UA' : 'en-US');
     document.getElementById('tallySub').textContent =
       COPY[lang].round + ' ' + (count % MALA) + ' / ' + MALA;
-    var lit = count % MALA === 0 && count > 0 ? MALA : count % MALA;
+    var lit = count % BEADS === 0 && count > 0 ? BEADS : count % BEADS;
     [].forEach.call(mala.children, function (d, i) { d.className = i < lit ? 'on' : ''; });
   }
 
