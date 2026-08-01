@@ -25,8 +25,7 @@
   ::selection{background:rgba(217,182,120,.28)}
   .dm-scroll{scrollbar-width:none;-ms-overflow-style:none}
   .dm-scroll::-webkit-scrollbar{display:none}
-  @keyframes dm-breathe{0%,100%{transform:translateX(-50%) translateY(0) scale(1);opacity:.6}
-    50%{transform:translateX(-50%) translateY(-8px) scale(1.04);opacity:.85}}
+  @keyframes dm-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
   @keyframes dm-spin{to{transform:rotate(360deg)}}
 
   body{color:#efe9f2;font-family:Manrope,system-ui,sans-serif;min-height:100vh;
@@ -34,9 +33,16 @@
   .page{width:100%;max-width:480px;position:relative;background:#0a080d;padding-bottom:132px}
   .hero{position:relative;overflow:hidden;
     background:radial-gradient(120% 80% at 50% -10%,#291d35 0%,#16111f 45%,#0a080d 100%)}
-  .halo{position:absolute;top:-220px;left:50%;width:460px;height:460px;border-radius:50%;
-    background:radial-gradient(circle,rgba(217,182,120,.2) 0%,rgba(217,182,120,0) 64%);
-    animation:dm-breathe 9s ease-in-out infinite;pointer-events:none}
+  /* The thangka lights the hero. It is the real material of this product, so it
+     carries the section instead of a floating coloured haze. The scrim keeps the
+     type at full contrast; the image only shows through where nothing is set. */
+  .halo{position:absolute;inset:0 0 auto;height:560px;pointer-events:none;
+    background-image:linear-gradient(180deg,rgba(10,8,13,.62) 0%,rgba(10,8,13,.82) 46%,#0a080d 96%),
+      url(uploads/img/vajrasattva.jpg);
+    background-size:100% 100%,150% auto;
+    background-position:top,center -40px;
+    background-repeat:no-repeat;
+    animation:dm-breathe 14s ease-in-out infinite}
   .bar{position:relative;padding:22px 22px 0;display:flex;align-items:center;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:10px}
   .mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(160deg,#1b1524,#0d0a12);
@@ -82,9 +88,12 @@
   section{padding:56px 22px 0}
   .sechead{margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;
     font-size:23px;color:var(--gold)}
-  .cards{margin-top:22px;display:flex;flex-direction:column;gap:12px}
-  article{display:flex;align-items:center;gap:16px;padding:22px 20px;border-radius:20px;
-    background:linear-gradient(180deg,#16111e,#100c16);border:1px solid rgba(255,255,255,.055)}
+  /* Not cards. The steps block is the only carded thing on the page, so it reads
+     as an instruction rather than as one more list. */
+  .cards{margin-top:8px;display:flex;flex-direction:column}
+  article{display:flex;align-items:center;gap:18px;padding:20px 0;
+    border-bottom:1px solid rgba(255,255,255,.06)}
+  article:last-child{border-bottom:0}
   .bullet{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:rgba(217,182,120,.1);
     border:1px solid rgba(217,182,120,.24);display:grid;place-items:center}
   /* ◉ — a ring with a filled centre, the glyph the app itself uses. */
@@ -126,21 +135,12 @@
   .step h4{margin:0 0 6px;font-size:17.5px;font-weight:800;letter-spacing:-.02em}
   .step p{margin:0;font-size:15px;line-height:1.6;color:#a9a2b4;text-wrap:pretty}
 
-  .quote{position:relative;overflow:hidden;border-radius:24px;
-    border:1px solid rgba(217,182,120,.2);
-    background:radial-gradient(110% 130% at 50% 0%,#291d35 0%,#16111f 55%,#0d0a12 100%);
-    padding:44px 26px;text-align:center}
-  .quote .halo2{position:absolute;top:-140px;left:50%;transform:translateX(-50%);
-    width:360px;height:360px;border-radius:50%;
-    background:radial-gradient(circle,rgba(217,182,120,.16) 0%,rgba(217,182,120,0) 65%);
-    pointer-events:none}
+  .quote{position:relative;padding:8px 8px 0;text-align:center}
+  .quote::before{content:"";display:block;width:38px;height:1px;margin:0 auto 26px;
+    background:rgba(217,182,120,.45)}
   .quote p{position:relative;margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;
     font-size:26px;line-height:1.32;color:#efe9f2;text-wrap:balance}
 
-  footer{margin-top:44px;border-top:1px solid rgba(255,255,255,.06)}
-  .foot{padding:22px;display:flex;align-items:center;justify-content:space-between;
-    font-size:13px;color:#948fa3}
-  .foot a{color:#948fa3}
 
   /* Desktop only: the app is for a phone, so hand the page over to one.
      Hidden below 900px, where the visitor is already holding the phone. */
@@ -172,9 +172,9 @@
   .cta{pointer-events:auto;flex:1;width:100%;max-width:436px;min-height:58px;display:flex;
     align-items:center;justify-content:center;gap:10px;border-radius:16px;
     background:linear-gradient(180deg,#e8cd97,#cfa863);color:#1a1208;font-size:17px;
-    font-weight:800;letter-spacing:-.01em;box-shadow:0 12px 34px rgba(217,182,120,.26);
+    font-weight:800;letter-spacing:-.01em;box-shadow:0 10px 26px rgba(0,0,0,.55);
     transition:box-shadow .2s,transform .12s}
-  .cta:hover{box-shadow:0 16px 44px rgba(217,182,120,.38);color:#1a1208}
+  .cta:hover{box-shadow:0 14px 34px rgba(0,0,0,.65);color:#1a1208}
   .cta:active{transform:scale(.985)}
 
 </style>
@@ -284,16 +284,10 @@
 
   <section>
     <div class="quote">
-      <div class="halo2"></div>
       <p data-t="quote"></p>
     </div>
   </section>
 
-  <footer>
-    <div class="foot">
-      <span>DorjeMala · 2026</span>
-    </div>
-  </footer>
 
   <aside class="qr">
     <div class="code"><img src="qr.svg" width="104" height="104" alt=""></div>
